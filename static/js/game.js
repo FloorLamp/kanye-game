@@ -155,7 +155,12 @@ Fist.prototype = {
       this.center.x = this.entity.center.x + this.offset.x;
       this.center.y = this.entity.center.y + this.offset.y;
 
-    } else if (this.frame > 15) {
+    } else {
+      this.center.x = this.entity.center.x;
+      this.center.y = this.entity.center.y;
+    }
+
+    if (this.frame > 25) {
       this.destroy();
     }
 
