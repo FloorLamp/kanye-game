@@ -3,8 +3,9 @@ var Game = function() {
   this.screen = canvas.getContext('2d');
   this.gameSize = { x: canvas.width, y: canvas.height };
 
-
+  this.gameStarted = false;
   this.playerScore = -53000000;
+  this.song = new Song(this, "titleScreen");
 
   this.bodies = {
     player: null,
@@ -63,6 +64,7 @@ Game.prototype = {
 }
 
 var Player = function(game) {
+  var self = this;
   this.KEYS = { UP: 87, DOWN: 83, LEFT: 65, RIGHT: 68, SPACE: 32 };
   this.DIRECTIONS = { RIGHT: 1, LEFT: -1 };
 
@@ -87,6 +89,12 @@ var Player = function(game) {
   var keyState = {};
 
   window.addEventListener('keydown', function(e) {
+    if (!self.game.gameStarted) {
+      self.game.gameStarted = true;
+      self.game.song.playing = false;
+      self.game.song.stopSong();
+      playSound('startGame');
+    }
     keyState[e.keyCode] = true;
   });
 
@@ -106,7 +114,7 @@ Player.prototype = {
 
   startAttack: function() {
     this.fist = new Fist(this);
-    attackSound();
+    playSound('attack');
   },
 
   destroyChild: function(name) {
