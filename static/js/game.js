@@ -33,7 +33,7 @@ Game.prototype = {
   },
 
   update: function() {
-    this.bodies.player.update();
+    this.player.update();
     for (var body in this.bodies.enemies) {
       this.bodies.enemies[body].update();
     }
@@ -56,7 +56,7 @@ Game.prototype = {
 
     this.screen.fillStyle = 'black';
 
-    this.bodies.player.draw();
+    this.player.draw();
     for (var body in this.bodies.enemies) {
       this.bodies.enemies[body].draw();
     }
@@ -69,7 +69,7 @@ var Player = function(game) {
   this.DIRECTIONS = { RIGHT: 1, LEFT: -1 };
 
   this.game = game;
-  this.game.bodies.player = this;
+  this.game.player = this;
 
   this.size = {
     x: 40,
@@ -180,6 +180,8 @@ var Fist = function(entity) {
 
   this.frame = 0;
   this.isActive = true;
+
+  this.damage = 2;
 }
 
 Fist.prototype = {
@@ -206,8 +208,7 @@ Fist.prototype = {
         var enemy = this.entity.game.bodies.enemies[enemyId];
 
         if (isColliding(this, enemy)) {
-          this.entity.updateScore(enemy.points);
-          enemy.destroy();
+          enemy.takeDamage(this.damage);
         }
       }
     }
@@ -244,11 +245,12 @@ var Enemy = function(game, type, center) {
   }
   this.center = center;
 
-  // default speed
+  // defaults
   this.speed = 4;
   this.vector = null;
-
   this.points = 1000000;
+  this.maxHealth = 100;
+  this.health = this.maxHealth;
 
   this.TYPES = {
     '2CHAINZ': 0,
@@ -262,12 +264,16 @@ var Enemy = function(game, type, center) {
 
 Enemy.prototype = {
   update: function() {
-    this.action();
     this.move();
   },
 
-  action: function() {
-    // body...
+  takeDamage: function(damage) {
+    this.health -= damage;
+
+    if (this.health <= 0) {
+      this.game.player.updateScore(this.points);
+      this.destroy();
+    }
   },
 
   move: function() {
@@ -303,6 +309,13 @@ Enemy.prototype = {
 
   draw: function() {
     drawRect(this.game.screen, this);
+    if (this.health < this.maxHealth) {
+      this.game.screen.fillStyle = 'green';
+      width = this.health / this.maxHealth * this.size.x;
+      this.game.screen.fillRect(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2 - 5,
+                                width, 3);
+      this.game.screen.fillStyle = 'black';
+    }
   },
 
   destroy: function() {
