@@ -31,8 +31,14 @@ Game.prototype = {
     this.screen.clearRect(0, 0, this.gameSize.x, this.gameSize.y);
 
     this.screen.font = '25px Arial';
-    this.screen.fillStyle = 'red';
-    this.screen.fillText('$' + this.playerScore.toString(), canvas.width - 145, canvas.height - 570);
+    var scoreModifier = '-'
+    if (this.playerScore >= 0) {
+      this.screen.fillStyle = 'green';
+      scoreModifier = ''
+    } else {
+      this.screen.fillStyle = 'red';
+    }
+    this.screen.fillText(scoreModifier + '$' + Math.abs(this.playerScore).toString(), canvas.width - 145, canvas.height - 570);
 
     this.screen.fillStyle = 'black';
     for (var i = 0; i < this.bodies.length; i++) {
@@ -82,7 +88,7 @@ Player.prototype = {
   startAttack: function() {
     this.fist = new Fist(this);
     attackSound();
-    this.game.playerScore += 1;
+    this.game.playerScore += 1000000;
   },
 
   destroyChild: function(name) {
