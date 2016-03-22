@@ -9,12 +9,13 @@ var Game = function() {
 
   this.bodies = {
     player: null,
-    enemies: {}
+    enemies: {},
+    projectiles: {},
   };
 
   new Player(this);
 
-  this.enemySpawnChance = .005;
+  this.enemySpawnChance = .002;
 
   var self = this;
 
@@ -37,8 +38,13 @@ Game.prototype = {
     for (var body in this.bodies.enemies) {
       this.bodies.enemies[body].update();
     }
+    for (var body in this.bodies.projectiles) {
+      this.bodies.projectiles[body].update();
+    }
 
-    if (Math.random() < this.enemySpawnChance) this.spawnEnemy();
+    if (Math.random() < this.enemySpawnChance) {
+      this.spawnEnemy();
+    }
   },
 
   draw: function() {
@@ -59,6 +65,9 @@ Game.prototype = {
     this.player.draw();
     for (var body in this.bodies.enemies) {
       this.bodies.enemies[body].draw();
+    }
+    for (var body in this.bodies.projectiles) {
+      this.bodies.projectiles[body].draw();
     }
   }
 }
@@ -83,6 +92,8 @@ var Player = function(game) {
   this.direction = this.DIRECTIONS.RIGHT;
 
   this.speed = 5;
+  this.maxHealth = 500;
+  this.health = this.maxHealth;
 
   this.fist = null;
 
@@ -110,6 +121,14 @@ var Player = function(game) {
 Player.prototype = {
   updateScore: function(change) {
     this.game.playerScore += change;
+  },
+
+  takeDamage: function(damage) {
+    this.health -= damage;
+
+    if (this.health <= 0) {
+      alert('you lose')
+    }
   },
 
   startAttack: function() {
@@ -225,11 +244,84 @@ Fist.prototype = {
   }
 }
 
+var Projectile = function(game, source, destination) {
+  this.game = game;
+  this.sourceId = source.id;
+
+  this.id = 'projectile' + Date.now().toString();
+  this.game.bodies.projectiles[this.id] = this;
+
+  this.size = {
+    x: 5,
+    y: 5
+  }
+
+  this.speed = 6;
+
+  this.center = {
+    x: source.center.x,
+    y: source.center.y,
+  }
+  var distance = getDistance(source.center, destination.center);
+  this.vector = {
+    x: (destination.center.x - this.center.x) / distance * this.speed,
+    y: (destination.center.y - this.center.y) / distance * this.speed,
+  }
+
+  this.isActive = true;
+
+  this.damage = 2;
+}
+
+Projectile.prototype = {
+  destroy: function() {
+    delete this.game.bodies.projectiles[this.id];
+  },
+
+  update: function() {
+    this.center.x += this.vector.x;
+    this.center.y += this.vector.y;
+
+    if (this.center.x >= this.game.gameSize.x + this.size.x / 2 ||
+        this.center.x <= -this.size.x / 2 ||
+        this.center.y >= this.game.gameSize.y + this.size.y / 2 ||
+        this.center.y <= -this.size.y / 2) {
+      this.destroy()
+      return;
+    }
+
+
+    if (this.isActive) {
+      // collision detection against enemies
+      for (var enemyId in this.game.bodies.enemies) {
+        if (enemyId == this.sourceId) continue;
+
+        var enemy = this.game.bodies.enemies[enemyId];
+
+        if (isColliding(this, enemy)) {
+          enemy.takeDamage(this.damage);
+          this.destroy();
+          return;
+        }
+      }
+
+      if (isColliding(this, this.game.player)) {
+        this.game.player.takeDamage(this.damage);
+        this.destroy();
+      }
+    }
+  },
+
+  draw: function() {
+    drawRect(this.game.screen, this);
+  }
+}
+
 var Enemy = function(game, type, center) {
   this.game = game;
 
-  this.name = 'enemy' + Date.now().toString();
-  this.game.bodies.enemies[this.name] = this;
+  this.id = 'enemy' + Date.now().toString();
+  this.game.bodies.enemies[this.id] = this;
 
   this.size = {
     x: 40,
@@ -251,19 +343,51 @@ var Enemy = function(game, type, center) {
   this.points = 1000000;
   this.maxHealth = 100;
   this.health = this.maxHealth;
+  this.attackChance = 0;
+  this.isAttacking = false;
+  this.attackFrame = 0;
 
   this.TYPES = {
     '2CHAINZ': 0,
   }
 
-  if (type === this.TYPES['2CHAINZ']) {
+  if (!type) {
+    var rand = Math.random();
+    if (rand < .5) type = this.TYPES['2CHAINZ'];
+  }
+  this.type = type;
+
+  if (this.type === this.TYPES['2CHAINZ']) {
     this.speed = 3;
+    this.attackChance = .5;
+    // this.projectileSpeed = 3;
+    // this.projectileDamage = 3;
   }
 
 }
 
 Enemy.prototype = {
   update: function() {
+    if (!this.isAttacking && Math.random() < this.attackChance) {
+      if (this.type === this.TYPES['2CHAINZ']) {
+        this.isAttacking = true;
+        new Projectile(this.game, this, this.game.player);
+      }
+    }
+    if (this.isAttacking) {
+      if (this.type === this.TYPES['2CHAINZ']) {
+        if (this.attackFrame == 40) {
+          new Projectile(this.game, this, this.game.player);
+        }
+      }
+      this.attackFrame++;
+
+      if (this.attackFrame === 100) {
+        this.isAttacking = false;
+        this.attackFrame = 0;
+      }
+    }
+
     this.move();
   },
 
@@ -319,7 +443,7 @@ Enemy.prototype = {
   },
 
   destroy: function() {
-    delete this.game.bodies.enemies[this.name];
+    delete this.game.bodies.enemies[this.id];
   },
 }
 
@@ -333,6 +457,10 @@ var isColliding = function(e1, e2) {
          e1.center.x - e1.size.x / 2 <= e2.center.x + e2.size.x / 2 &&
          e1.center.y + e1.size.y / 2 >= e2.center.y - e2.size.y / 2 &&
          e1.center.y - e1.size.y / 2 <= e2.center.y + e2.size.y / 2;
+}
+
+var getDistance = function(a, b) {
+  return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2))
 }
 
 new Game();
