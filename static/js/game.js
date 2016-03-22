@@ -4,10 +4,16 @@ var Game = function() {
   this.gameSize = { x: canvas.width, y: canvas.height };
 
 
-  this.bodies = [];
   this.playerScore = -53000000;
 
-  this.bodies.push(new Player(this));
+  this.bodies = {
+    player: null,
+    enemies: {}
+  };
+
+  new Player(this);
+
+  this.enemySpawnChance = .005;
 
   var self = this;
 
@@ -21,10 +27,17 @@ var Game = function() {
 }
 
 Game.prototype = {
+  spawnEnemy: function() {
+    new Enemy(this);
+  },
+
   update: function() {
-    for (var i = 0; i < this.bodies.length; i++) {
-      this.bodies[i].update();
+    this.bodies.player.update();
+    for (var body in this.bodies.enemies) {
+      this.bodies.enemies[body].update();
     }
+
+    if (Math.random() < this.enemySpawnChance) this.spawnEnemy();
   },
 
   draw: function() {
@@ -41,8 +54,10 @@ Game.prototype = {
     this.screen.fillText(scoreModifier + '$' + Math.abs(this.playerScore).toString(), canvas.width - 145, canvas.height - 570);
 
     this.screen.fillStyle = 'black';
-    for (var i = 0; i < this.bodies.length; i++) {
-      this.bodies[i].draw();
+
+    this.bodies.player.draw();
+    for (var body in this.bodies.enemies) {
+      this.bodies.enemies[body].draw();
     }
   }
 }
@@ -52,6 +67,7 @@ var Player = function(game) {
   this.DIRECTIONS = { RIGHT: 1, LEFT: -1 };
 
   this.game = game;
+  this.game.bodies.player = this;
 
   this.size = {
     x: 40,
@@ -84,11 +100,13 @@ var Player = function(game) {
 }
 
 Player.prototype = {
+  updateScore: function(change) {
+    this.game.playerScore += change;
+  },
 
   startAttack: function() {
     this.fist = new Fist(this);
     attackSound();
-    this.game.playerScore += 1000000;
   },
 
   destroyChild: function(name) {
@@ -125,7 +143,7 @@ Player.prototype = {
   draw: function() {
     drawRect(this.game.screen, this);
 
-    if (this.fist) {
+    if (this.fist && this.fist.isActive) {
       this.fist.draw(this.game.screen);
     }
   }
@@ -153,6 +171,7 @@ var Fist = function(entity) {
   this.direction = this.entity.direction;
 
   this.frame = 0;
+  this.isActive = true;
 }
 
 Fist.prototype = {
@@ -170,8 +189,19 @@ Fist.prototype = {
       this.center.y = this.entity.center.y + this.offset.y;
 
     } else {
-      this.center.x = this.entity.center.x;
-      this.center.y = this.entity.center.y;
+      this.isActive = false;
+    }
+
+    if (this.isActive) {
+      // collision detection against enemies
+      for (var enemyId in this.entity.game.bodies.enemies) {
+        var enemy = this.entity.game.bodies.enemies[enemyId];
+
+        if (isColliding(this, enemy)) {
+          this.entity.updateScore(enemy.points);
+          enemy.destroy();
+        }
+      }
     }
 
     if (this.frame > 25) {
@@ -188,6 +218,9 @@ Fist.prototype = {
 
 var Enemy = function(game, type, center) {
   this.game = game;
+
+  this.name = 'enemy' + Date.now().toString();
+  this.game.bodies.enemies[this.name] = this;
 
   this.size = {
     x: 40,
@@ -206,6 +239,8 @@ var Enemy = function(game, type, center) {
   // default speed
   this.speed = 4;
   this.vector = null;
+
+  this.points = 1000000;
 
   this.TYPES = {
     '2CHAINZ': 0,
@@ -260,12 +295,23 @@ Enemy.prototype = {
 
   draw: function() {
     drawRect(this.game.screen, this);
-  }
+  },
+
+  destroy: function() {
+    delete this.game.bodies.enemies[this.name];
+  },
 }
 
 var drawRect = function(screen, body) {
   screen.fillRect(body.center.x - body.size.x / 2, body.center.y - body.size.y / 2,
                   body.size.x, body.size.y);
 };
+
+var isColliding = function(e1, e2) {
+  return (e1.center.x + e1.size.x / 2 >= e2.center.x - e2.size.x / 2 ||
+          e1.center.x - e1.size.x / 2 >= e2.center.x + e2.size.x / 2) &&
+          (e1.center.y + e1.size.y / 2 >= e2.center.y - e2.size.y / 2 ||
+          e1.center.y - e1.size.y / 2 >= e2.center.y + e2.size.y / 2);
+}
 
 new Game();
