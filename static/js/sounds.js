@@ -4,9 +4,5 @@ function attackSound(self) {
 
     var playAttack = new Audio(curAttack);
 
-    playAttack.onended = function(){
-      self.isAttacking = false;
-    };
-
     playAttack.play();
 }
