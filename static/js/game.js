@@ -308,10 +308,10 @@ var drawRect = function(screen, body) {
 };
 
 var isColliding = function(e1, e2) {
-  return (e1.center.x + e1.size.x / 2 >= e2.center.x - e2.size.x / 2 ||
-          e1.center.x - e1.size.x / 2 >= e2.center.x + e2.size.x / 2) &&
-          (e1.center.y + e1.size.y / 2 >= e2.center.y - e2.size.y / 2 ||
-          e1.center.y - e1.size.y / 2 >= e2.center.y + e2.size.y / 2);
+  return e1.center.x + e1.size.x / 2 >= e2.center.x - e2.size.x / 2 &&
+         e1.center.x - e1.size.x / 2 <= e2.center.x + e2.size.x / 2 &&
+         e1.center.y + e1.size.y / 2 >= e2.center.y - e2.size.y / 2 &&
+         e1.center.y - e1.size.y / 2 <= e2.center.y + e2.size.y / 2;
 }
 
 new Game();
