@@ -3,7 +3,9 @@ var Game = function() {
   this.screen = canvas.getContext('2d');
   this.gameSize = { x: canvas.width, y: canvas.height };
 
+
   this.bodies = [];
+  this.playerScore = -53000000;
 
   this.bodies.push(new Player(this));
 
@@ -28,6 +30,11 @@ Game.prototype = {
   draw: function() {
     this.screen.clearRect(0, 0, this.gameSize.x, this.gameSize.y);
 
+    this.screen.font = '25px Arial';
+    this.screen.fillStyle = 'red';
+    this.screen.fillText('$' + this.playerScore.toString(), canvas.width - 145, canvas.height - 570);
+
+    this.screen.fillStyle = 'black';
     for (var i = 0; i < this.bodies.length; i++) {
       this.bodies[i].draw();
     }
@@ -75,6 +82,7 @@ Player.prototype = {
   startAttack: function() {
     this.fist = new Fist(this);
     attackSound();
+    this.game.playerScore += 1;
   },
 
   destroyChild: function(name) {
