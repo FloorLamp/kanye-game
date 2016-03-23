@@ -20,10 +20,10 @@ export function playSound(sound, self) {
 
 export class Song {
   constructor(game, song) {
-    this.game = game;
-    this.playing = true;
-    this.curSong = new Audio(SOUNDS[song]);
-    this.loop = true;
+    this.game = game
+    this.playing = true
+    this.curSong = new Audio(SOUNDS[song])
+    this.loop = true
 
     var self = this;
 
@@ -36,7 +36,7 @@ export class Song {
 
     if (this.playing) {
       this.curSong.play()
-    };
+    }
 
   }
 
@@ -45,6 +45,6 @@ export class Song {
   }
 
   stopSong() {
-    this.curSong.pause();
+    this.curSong.pause()
   }
 }
