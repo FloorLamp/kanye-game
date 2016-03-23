@@ -1,20 +1,26 @@
 const SOUNDS = {
   titleScreen: require('../sounds/titlescreen.mp3'),
   startGame: require('../sounds/startgame.mp3'),
-  attack: [
+  kanyeAttack: [
     require('../sounds/hangh1.mp3'),
     require('../sounds/hangh2.mp3'),
     require('../sounds/hangh3.mp3')
+  ],
+  twochainzAttack: [
+    require('../sounds/2chainz1.mp3'),
+    require('../sounds/2chainz2.mp3'),
+    require('../sounds/2chainzgetem.mp3')
   ]
 }
 
 export function playSound(sound, self) {
   var soundFile = SOUNDS[sound];
-  if (sound === 'attack') {
+  var toPlay = soundFile;
+  if (Array.isArray(soundFile)) {
     toPlay = soundFile[Math.floor(Math.random() * soundFile.length)];
   }
 
-  var toPlaySound = new Audio(soundFile);
+  var toPlaySound = new Audio(toPlay);
   toPlaySound.play();
 }
 

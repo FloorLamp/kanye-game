@@ -1,4 +1,5 @@
 import { drawRect } from './Draw'
+import { playSound } from './sounds'
 import Projectile from './weapons/Projectile'
 
 export default class Enemy {
@@ -58,11 +59,12 @@ export default class Enemy {
       if (this.type === this.TYPES['2CHAINZ']) {
         this.isAttacking = true
         new Projectile(this.game, this, this.game.player)
+        playSound('twochainzAttack')
       }
     }
     if (this.isAttacking) {
       if (this.type === this.TYPES['2CHAINZ']) {
-        if (this.attackFrame == 20) {
+        if (this.attackFrame == 40) {
           new Projectile(this.game, this, this.game.player)
         }
       }
