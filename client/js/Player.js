@@ -25,6 +25,7 @@ export default class Player {
     this.isAlive = true
     this.maxHealth = 50
     this.health = this.maxHealth
+    this.invincibilityFrame = 0
 
     this.melee = null
 
@@ -49,13 +50,21 @@ export default class Player {
     }
   }
 
+  isInvincible() {
+    return this.invincibilityFrame > 0
+  }
+
   takeDamage(damage) {
+    if (this.isInvincible()) return
+
     this.health -= damage
 
     if (this.health <= 0) {
       this.isAlive = false
       this.game.lose()
     }
+
+    this.invincibilityFrame++
   }
 
   startAttack() {
@@ -67,9 +76,7 @@ export default class Player {
     this[name] = null
   }
 
-  update() {
-    if (!this.isAlive) return
-
+  move() {
     if (this.isDown(KEYS.LEFT)) {
       this.center.x -= this.speed
       this.direction = DIRECTIONS.LEFT
@@ -81,6 +88,15 @@ export default class Player {
     if (this.isDown(KEYS.UP)) this.center.y -= this.speed
     if (this.isDown(KEYS.DOWN)) this.center.y += this.speed
 
+    if (this.center.x < this.size.x / 2) this.center.x = this.size.x / 2
+    else if (this.center.x > this.game.gameSize.x - this.size.x / 2) this.center.x = this.game.gameSize.x - this.size.x / 2
+    if (this.center.y < this.size.y / 2) this.center.y = this.size.y / 2
+    else if (this.center.y > this.game.gameSize.y - this.size.y / 2) this.center.y = this.game.gameSize.y - this.size.y / 2
+  }
+
+  update() {
+    if (!this.isAlive) return
+
     if (this.isDown(KEYS.SPACE)) {
       if (this.melee === null) {
         this.startAttack()
@@ -89,15 +105,18 @@ export default class Player {
     if (this.melee) {
       this.melee.update()
     }
+    this.move()
 
-    if (this.center.x < this.size.x / 2) this.center.x = this.size.x / 2
-    else if (this.center.x > this.game.gameSize.x - this.size.x / 2) this.center.x = this.game.gameSize.x - this.size.x / 2
-    if (this.center.y < this.size.y / 2) this.center.y = this.size.y / 2
-    else if (this.center.y > this.game.gameSize.y - this.size.y / 2) this.center.y = this.game.gameSize.y - this.size.y / 2
+    if (this.isInvincible()) {
+      this.invincibilityFrame++
+
+      if (this.invincibilityFrame > 30) this.invincibilityFrame = 0
+    }
   }
 
   draw() {
-    drawRect(this.game.screen, this)
+    if (this.isInvincible() && this.invincibilityFrame % 6 === 0) {}
+    else drawRect(this.game.screen, this)
 
     if (this.melee && this.melee.isActive) {
       this.melee.draw(this.game.screen)
