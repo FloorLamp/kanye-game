@@ -2,11 +2,12 @@ import { drawRect } from './Draw'
 import Projectile from './weapons/Projectile'
 
 export default class Enemy {
-  constructor(game, type, center) {
+  constructor(game, opts) {
     this.game = game
 
-    this.id = 'enemy' + Date.now().toString()
+    this.id = opts.id || 'enemy' + Date.now().toString()
     this.game.bodies.enemies[this.id] = this
+    this.game.enemySpawnCount++
 
     this.size = {
       x: 40,
@@ -14,19 +15,19 @@ export default class Enemy {
     }
 
     // spawn randomly
-    if (!center) {
-      center = {
+    if (!opts.center) {
+      opts.center = {
         x: game.gameSize.x,
         y: Math.random() * game.gameSize.y
       }
     }
-    this.center = center
+    this.center = opts.center
 
     // defaults
     this.speed = 4
     this.vector = null
     this.points = 1000000
-    this.maxHealth = 100
+    this.maxHealth = 50
     this.health = this.maxHealth
     this.attackChance = 0
     this.isAttacking = false
@@ -36,11 +37,11 @@ export default class Enemy {
       '2CHAINZ': 0,
     }
 
-    if (!type) {
+    if (!opts.type) {
       var rand = Math.random()
-      if (rand < .5) type = this.TYPES['2CHAINZ']
+      if (rand < .5) opts.type = this.TYPES['2CHAINZ']
     }
-    this.type = type
+    this.type = opts.type
 
     if (this.type === this.TYPES['2CHAINZ']) {
       this.speed = 3
@@ -131,6 +132,7 @@ export default class Enemy {
   }
 
   destroy() {
+    this.game.enemyKilledCount++
     delete this.game.bodies.enemies[this.id]
   }
 }

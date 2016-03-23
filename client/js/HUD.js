@@ -6,6 +6,14 @@ export default class HUD {
     this.game = game
   }
 
+  drawLevel() {
+    if (this.game.level == 0) return
+
+    this.game.screen.fillStyle = 'green'
+    this.game.screen.fillText((this.game.level).toString(), 25, 30)
+    this.game.screen.fillStyle = 'black'
+  }
+
   drawHealth() {
     if (this.game.player.health <= 0) return
 
@@ -32,6 +40,7 @@ export default class HUD {
   }
 
   draw() {
+    this.drawLevel()
     this.drawScore()
     this.drawHealth()
   }

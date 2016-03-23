@@ -48,6 +48,12 @@ export default class Player {
     this.isDown = function(keyCode) {
       return keyState[keyCode] === true
     }
+    this.isMoving = function() {
+      return this.isDown(this.KEYS.LEFT) ||
+             this.isDown(this.KEYS.RIGHT) ||
+             this.isDown(this.KEYS.UP) ||
+             this.isDown(this.KEYS.DOWN);
+    }
   }
 
   takeDamage(damage) {
