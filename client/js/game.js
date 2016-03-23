@@ -1,4 +1,7 @@
 import { Song, playSound } from './sounds';
+
+import HUD from './HUD';
+
 import Enemy from './Enemy';
 import Player from './Player';
 
@@ -19,7 +22,8 @@ class Game {
       projectiles: {},
     };
 
-    new Player(this);
+    this.player = new Player(this);
+    this.hud = new HUD(this);
 
     this.enemySpawnChance = .002;
 
@@ -32,11 +36,21 @@ class Game {
     tick();
   }
 
+  updateScore(change) {
+    this.playerScore += change;
+  }
+
+  lose() {
+    this.isLoss = true;
+  }
+
   spawnEnemy() {
     new Enemy(this);
   }
 
   update() {
+    if (this.isLoss) return;
+
     this.player.update();
     for (var body in this.bodies.enemies) {
       this.bodies.enemies[body].update();
@@ -53,17 +67,7 @@ class Game {
   draw() {
     this.screen.clearRect(0, 0, this.gameSize.x, this.gameSize.y);
 
-    this.screen.font = '25px Arial';
-    var scoreModifier = '-'
-    if (this.playerScore >= 0) {
-      this.screen.fillStyle = 'green';
-      scoreModifier = ''
-    } else {
-      this.screen.fillStyle = 'red';
-    }
-    this.screen.fillText(scoreModifier + '$' + Math.abs(this.playerScore).toString(), canvas.width - 145, canvas.height - 570);
-
-    this.screen.fillStyle = 'black';
+    this.hud.draw();
 
     this.player.draw();
     for (var body in this.bodies.enemies) {
@@ -71,6 +75,12 @@ class Game {
     }
     for (var body in this.bodies.projectiles) {
       this.bodies.projectiles[body].draw();
+    }
+
+    if (this.isLoss) {
+      this.screen.fillStyle = 'red';
+      this.screen.fillText('YOU LOSE', this.gameSize.x /2 , this.gameSize.y /2 );
+      this.screen.fillStyle = 'black';
     }
   }
 }

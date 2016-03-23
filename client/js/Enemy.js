@@ -50,7 +50,9 @@ export default class Enemy {
     }
   }
 
-  update() {
+  attack() {
+    if (this.game.player.health <= 0) return
+
     if (!this.isAttacking && Math.random() < this.attackChance) {
       if (this.type === this.TYPES['2CHAINZ']) {
         this.isAttacking = true;
@@ -70,15 +72,13 @@ export default class Enemy {
         this.attackFrame = 0;
       }
     }
-
-    this.move();
   }
 
   takeDamage(damage) {
     this.health -= damage;
 
     if (this.health <= 0) {
-      this.game.player.updateScore(this.points);
+      this.game.updateScore(this.points);
       this.destroy();
     }
   }
@@ -112,6 +112,11 @@ export default class Enemy {
       this.vector.y *= -1;
     }
 
+  }
+
+  update() {
+    this.attack();
+    this.move();
   }
 
   draw() {

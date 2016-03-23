@@ -2,14 +2,13 @@ import { playSound } from './sounds';
 import { drawRect } from './Draw';
 import Fist from './weapons/Fist';
 
-class Player {
+export default class Player {
 
   constructor(game) {
     this.KEYS = { UP: 87, DOWN: 83, LEFT: 65, RIGHT: 68, SPACE: 32 };
     this.DIRECTIONS = { RIGHT: 1, LEFT: -1 };
 
     this.game = game;
-    this.game.player = this;
 
     this.size = {
       x: 40,
@@ -23,7 +22,9 @@ class Player {
     this.direction = this.DIRECTIONS.RIGHT;
 
     this.speed = 5;
-    this.maxHealth = 500;
+
+    this.isAlive = true;
+    this.maxHealth = 50;
     this.health = this.maxHealth;
 
     this.fist = null;
@@ -49,15 +50,12 @@ class Player {
     };
   }
 
-  updateScore(change) {
-    this.game.playerScore += change;
-  }
-
   takeDamage(damage) {
     this.health -= damage;
 
     if (this.health <= 0) {
-      alert('you lose')
+      this.isAlive = false;
+      this.game.lose();
     }
   }
 
@@ -71,6 +69,8 @@ class Player {
   }
 
   update() {
+    if (!this.isAlive) return;
+
     if (this.isDown(this.KEYS.LEFT)) {
       this.center.x -= this.speed;
       this.direction = this.DIRECTIONS.LEFT;
@@ -105,5 +105,3 @@ class Player {
     }
   }
 }
-
-export default Player;
