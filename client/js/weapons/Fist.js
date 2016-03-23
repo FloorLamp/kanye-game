@@ -1,9 +1,18 @@
 import { isColliding } from '../utils'
 import { drawRect } from '../Draw'
+import Player from '../Player'
 
 export default class Fist {
-  constructor(entity) {
-    this.entity = entity
+  constructor(game, owner) {
+    this.game = game
+    this.owner = owner
+
+    // determine who this damages
+    if (this.owner instanceof Player) {
+      this.enemies = this.game.bodies.enemies
+    } else {
+      this.enemies = [this.game.player]
+    }
 
     this.size = {
       x: 30,
@@ -18,10 +27,10 @@ export default class Fist {
     }
 
     this.center = {
-      x: this.entity.center.x,
-      y: this.entity.center.y,
+      x: this.owner.center.x,
+      y: this.owner.center.y,
     }
-    this.direction = this.entity.direction
+    this.direction = this.owner.direction
 
     this.frame = 0
     this.isActive = true
@@ -30,7 +39,7 @@ export default class Fist {
   }
 
   destroy() {
-    this.entity.destroyChild('fist')
+    this.owner.destroyChild('fist')
   }
 
   update() {
@@ -39,8 +48,8 @@ export default class Fist {
     if (this.frame < 10) {
       this.offset.x += this.direction * this.speed
 
-      this.center.x = this.entity.center.x + this.offset.x
-      this.center.y = this.entity.center.y + this.offset.y
+      this.center.x = this.owner.center.x + this.offset.x
+      this.center.y = this.owner.center.y + this.offset.y
 
     } else {
       this.isActive = false
@@ -48,8 +57,10 @@ export default class Fist {
 
     if (this.isActive) {
       // collision detection against enemies
-      for (var enemyId in this.entity.game.bodies.enemies) {
-        var enemy = this.entity.game.bodies.enemies[enemyId]
+      for (var enemyId in this.enemies) {
+        if (enemyId == this.owner.id) continue
+
+        var enemy = this.enemies[enemyId]
 
         if (isColliding(this, enemy)) {
           enemy.takeDamage(this.damage)

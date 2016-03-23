@@ -1,6 +1,12 @@
 const SOUNDS = {
-  titleScreen: require('../sounds/titlescreen.mp3'),
+  titleScreen: require('../sounds/intro.mp3'),
   startGame: require('../sounds/startgame.mp3'),
+  gameOver: require('../sounds/gameover.mp3'),
+  gameEnd: require('../sounds/gameend.mp3'),
+  endoflevel: [
+    require('../sounds/endoflevel1.mp3'),
+    require('../sounds/endoflevel2.mp3'),
+  ],
   kanyeFistAttack: [
     require('../sounds/hangh1.mp3'),
     require('../sounds/hangh2.mp3'),
@@ -47,7 +53,8 @@ export class Song {
   }
 
   updateSong(song) {
-    this.curSong = new Audio(song)
+    this.curSong = new Audio(SOUNDS[song])
+    this.curSong.play()
   }
 
   stopSong() {

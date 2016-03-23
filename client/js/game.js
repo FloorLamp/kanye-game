@@ -42,6 +42,7 @@ export default class Game {
 
   nextLevel() {
     this.level++
+    if (this.level !== 1 && !this.gameEnded) playSound('endoflevel')
 
     if (this.level === 1) {
       setTimeout(() => {
@@ -69,9 +70,22 @@ export default class Game {
     }
   }
 
+  endGame() {
+    this.gameEnded = true
+    this.song.updateSong('gameEnd')
+  }
+
   checkConditions() {
-    if (this.player.isMoving() && this.level === 0) this.nextLevel();
+    if (!this.gameStarted && this.player.isMoving()) {
+      this.gameStarted = true
+      this.song.playing = false
+      this.song.stopSong()
+      playSound('startGame')
+    }
+
+    if (this.gameStarted && this.level === 0) this.nextLevel();
     else if (this.level === 1 && this.enemyKilledCount === 7) this.nextLevel()
+    else if (this.level === 2 && this.enemyKilledCount === 16) this.endGame()
   }
 
   updateScore(change) {
@@ -80,6 +94,7 @@ export default class Game {
 
   lose() {
     this.isLoss = true
+    this.song.updateSong('gameOver')
   }
 
   // spawnEnemy() {
@@ -87,7 +102,7 @@ export default class Game {
   // }
 
   update() {
-    if (this.isLoss) return
+    if (this.isLoss || this.gameEnded) return
 
     this.checkConditions()
 
@@ -116,6 +131,11 @@ export default class Game {
     if (this.isLoss) {
       this.screen.fillStyle = 'red'
       this.screen.fillText('YOU LOSE', this.gameSize.x /2 , this.gameSize.y /2 )
+      this.screen.fillStyle = 'black'
+    }
+    if (this.gameEnded) {
+      this.screen.fillStyle = 'green'
+      this.screen.fillText('YOU WIN KIM!', this.gameSize.x /2 , this.gameSize.y /2 )
       this.screen.fillStyle = 'black'
     }
   }
