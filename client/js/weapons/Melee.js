@@ -2,7 +2,7 @@ import { isColliding } from '../utils'
 import { drawRect } from '../Draw'
 import Player from '../Player'
 
-export default class Fist {
+export default class Melee {
   constructor(game, owner) {
     this.game = game
     this.owner = owner
@@ -34,12 +34,13 @@ export default class Fist {
 
     this.frame = 0
     this.isActive = true
+    this.enemiesHit = new Set()
 
-    this.damage = 2
+    this.damage = 5
   }
 
   destroy() {
-    this.owner.destroyChild('fist')
+    this.owner.melee = null
   }
 
   update() {
@@ -57,12 +58,13 @@ export default class Fist {
 
     if (this.isActive) {
       // collision detection against enemies
-      for (var enemyId in this.enemies) {
-        if (enemyId == this.owner.id) continue
+      for (let enemyId in this.enemies) {
+        if (enemyId == this.owner.id || this.enemiesHit.has(enemyId)) continue
 
-        var enemy = this.enemies[enemyId]
+        let enemy = this.enemies[enemyId]
 
         if (isColliding(this, enemy)) {
+          this.enemiesHit.add(enemyId)
           enemy.takeDamage(this.damage)
         }
       }
@@ -75,7 +77,7 @@ export default class Fist {
     this.frame++
   }
 
-  draw(screen) {
-    drawRect(screen, this)
+  draw() {
+    drawRect(this.game.screen, this)
   }
 }

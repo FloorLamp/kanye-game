@@ -1,5 +1,9 @@
 import { drawRect } from './Draw'
 import { playSound } from './sounds'
+import { getDistance } from './utils'
+import { DIRECTIONS } from './constants'
+
+import Melee from './weapons/Melee'
 import Projectile from './weapons/Projectile'
 
 export default class Enemy {
@@ -28,25 +32,26 @@ export default class Enemy {
     this.speed = 4
     this.vector = null
     this.points = 1000000
-    this.maxHealth = 50
+    this.maxHealth = 15
     this.health = this.maxHealth
     this.attackChance = 0
     this.isAttacking = false
     this.attackFrame = 0
+    this.melee = null
 
     this.TYPES = {
       '2CHAINZ': 0,
     }
 
     if (!opts.type) {
-      var rand = Math.random()
-      if (rand < .5) opts.type = this.TYPES['2CHAINZ']
+      // var rand = Math.random()
+      // if (rand < .5) opts.type = this.TYPES['2CHAINZ']
     }
     this.type = opts.type
 
     if (this.type === this.TYPES['2CHAINZ']) {
       this.speed = 3
-      this.attackChance = .5
+      this.attackChance = .05
       // this.projectileSpeed = 3
       // this.projectileDamage = 3
     }
@@ -54,6 +59,10 @@ export default class Enemy {
 
   attack() {
     if (this.game.player.health <= 0) return
+
+    if (getDistance(this.center, this.game.player.center) < 100 && this.melee === null) {
+      this.melee = new Melee(this.game, this)
+    }
 
     if (!this.isAttacking && Math.random() < this.attackChance) {
       if (this.type === this.TYPES['2CHAINZ']) {
@@ -115,11 +124,17 @@ export default class Enemy {
       this.vector.y *= -1
     }
 
+    this.direction = this.center.x < this.game.player.center.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
+
   }
 
   update() {
     this.attack()
     this.move()
+
+    if (this.melee) {
+      this.melee.update()
+    }
   }
 
   draw() {
@@ -130,6 +145,10 @@ export default class Enemy {
       this.game.screen.fillRect(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2 - 5,
                                 width, 3)
       this.game.screen.fillStyle = 'black'
+    }
+
+    if (this.melee && this.melee.isActive) {
+      this.melee.draw()
     }
   }
 
