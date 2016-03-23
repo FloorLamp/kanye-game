@@ -1,7 +1,7 @@
 const SOUNDS = {
   titleScreen: require('../sounds/titlescreen.mp3'),
   startGame: require('../sounds/startgame.mp3'),
-  kanyeAttack: [
+  kanyeFistAttack: [
     require('../sounds/hangh1.mp3'),
     require('../sounds/hangh2.mp3'),
     require('../sounds/hangh3.mp3')

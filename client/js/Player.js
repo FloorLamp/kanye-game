@@ -67,7 +67,7 @@ export default class Player {
 
   startAttack() {
     this.fist = new Fist(this)
-    playSound('kanyeAttack')
+    playSound('kanyeFistAttack')
   }
 
   destroyChild(name) {
