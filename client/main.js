@@ -1,6 +1,6 @@
-import './index.html';
-import './css/index.css';
+import './index.html'
+import './css/index.css'
 
-import Game from './js/game';
+import Game from './js/game'
 
-new Game();
+new Game()

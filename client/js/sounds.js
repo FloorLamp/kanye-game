@@ -9,33 +9,33 @@ export function playSound(sound, self) {
       require('../sounds/hangh1.mp3'),
       require('../sounds/hangh2.mp3'),
       require('../sounds/hangh3.mp3')
-    ];
-    var playSound = attacks[Math.floor(Math.random() * attacks.length)];
+    ]
+    var playSound = attacks[Math.floor(Math.random() * attacks.length)]
   } else {
     playSound = SOUNDS[sound]
   }
 
-  var toPlaySound = new Audio(playSound);
-  toPlaySound.play();
+  var toPlaySound = new Audio(playSound)
+  toPlaySound.play()
 }
 
 export class Song {
   constructor(game, song) {
-    this.game = game;
-    this.playing = true;
-    this.curSong = new Audio(SOUNDS[song]);
-    this.loop = true;
+    this.game = game
+    this.playing = true
+    this.curSong = new Audio(SOUNDS[song])
+    this.loop = true
 
     this.curSong.addEventListener('ended', function() { // need context
-      this.currentTime = 0;
+      this.currentTime = 0
       if (this.loop && this.playing) {
-        this.play();
+        this.play()
       }
     }, false)
 
     if (this.playing) {
       this.curSong.play()
-    };
+    }
 
   }
 
@@ -44,6 +44,6 @@ export class Song {
   }
 
   stopSong() {
-    this.curSong.pause();
+    this.curSong.pause()
   }
 }
