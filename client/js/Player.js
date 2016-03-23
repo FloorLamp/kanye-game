@@ -32,12 +32,6 @@ export default class Player {
     var keyState = {}
 
     window.addEventListener('keydown', (e) => {
-      if (!this.game.gameStarted) {
-        this.game.gameStarted = true
-        this.game.song.playing = false
-        this.game.song.stopSong()
-        playSound('startGame')
-      }
       keyState[e.keyCode] = true
     })
 
@@ -66,7 +60,7 @@ export default class Player {
   }
 
   startAttack() {
-    this.fist = new Fist(this)
+    this.fist = new Fist(this.game, this)
     playSound('kanyeAttack')
   }
 

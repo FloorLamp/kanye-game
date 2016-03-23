@@ -1,10 +1,18 @@
 import { isColliding, getDistance } from '../utils'
 import { drawRect } from '../Draw'
+import Player from '../Player'
 
 export default class Projectile {
   constructor(game, source, destination) {
     this.game = game
     this.sourceId = source.id
+
+    // determine who this damages
+    if (source instanceof Player) {
+      this.enemies = this.game.bodies.enemies
+    } else {
+      this.enemies = [this.game.player]
+    }
 
     this.id = 'projectile' + Date.now().toString()
     this.game.bodies.projectiles[this.id] = this
@@ -50,21 +58,16 @@ export default class Projectile {
 
     if (this.isActive) {
       // collision detection against enemies
-      for (var enemyId in this.game.bodies.enemies) {
+      for (var enemyId in this.enemies) {
         if (enemyId == this.sourceId) continue
 
-        var enemy = this.game.bodies.enemies[enemyId]
+        var enemy = this.enemies[enemyId]
 
         if (isColliding(this, enemy)) {
           enemy.takeDamage(this.damage)
           this.destroy()
           return
         }
-      }
-
-      if (isColliding(this, this.game.player)) {
-        this.game.player.takeDamage(this.damage)
-        this.destroy()
       }
     }
   }

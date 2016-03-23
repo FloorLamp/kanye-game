@@ -70,7 +70,14 @@ export default class Game {
   }
 
   checkConditions() {
-    if (this.player.isMoving() && this.level === 0) this.nextLevel();
+    if (!this.gameStarted && this.player.isMoving()) {
+      this.gameStarted = true
+      this.song.playing = false
+      this.song.stopSong()
+      playSound('startGame')
+    }
+
+    if (this.gameStarted && this.level === 0) this.nextLevel();
     else if (this.level === 1 && this.enemyKilledCount === 7) this.nextLevel()
   }
 
