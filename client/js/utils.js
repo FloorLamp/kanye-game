@@ -8,3 +8,22 @@ export function isColliding(e1, e2) {
 export function getDistance(a, b) {
   return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2))
 }
+
+export function getScaledVector(source, dest, scale) {
+  if (scale === undefined) scale = 1
+
+  let x = dest.x - source.x
+  let y = dest.y - source.y
+  let hypotenuse = getDistance(source, dest)
+
+  if (hypotenuse === 0)
+    return {
+      x: 0,
+      y: 0,
+    }
+
+  return {
+    x: x / hypotenuse * scale,
+    y: y / hypotenuse * scale,
+  }
+}

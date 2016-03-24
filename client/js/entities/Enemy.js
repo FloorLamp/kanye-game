@@ -1,6 +1,6 @@
 import { drawRect } from '../Draw'
 import { playSound } from '../sounds'
-import { getDistance } from '../utils'
+import { getDistance, getScaledVector } from '../utils'
 import { DIRECTIONS } from '../constants'
 
 import Entity from '../Entity'
@@ -11,6 +11,8 @@ export default class Enemy extends Entity {
 
   constructor(game, opts) {
     super(game)
+
+    if (opts === undefined) opts = {}
 
     this.id = opts.id || 'enemy' + Date.now().toString()
     this.game.bodies.enemies[this.id] = this
@@ -37,7 +39,6 @@ export default class Enemy extends Entity {
     this.maxHealth = 15
     this.health = this.maxHealth
     this.attackChance = 0
-    this.isAttacking = false
     this.attackFrame = 0
     this.melee = null
 
@@ -49,7 +50,7 @@ export default class Enemy extends Entity {
       // var rand = Math.random()
       // if (rand < .5) opts.type = this.TYPES['2CHAINZ']
     }
-    this.type = opts.type
+    this.type = opts.types
 
     if (this.type === this.TYPES['2CHAINZ']) {
       this.speed = 3
@@ -59,41 +60,60 @@ export default class Enemy extends Entity {
     }
   }
 
+  get isAttacking() {
+    return this.attackFrame > 0
+  }
+
+  startAttack() {
+    this.attackFrame++
+  }
+
   attack() {
     if (this.melee && this.game.bodies.objects[this.melee.id] === undefined) this.melee = null;
 
-    if (getDistance(this.center, this.game.player.center) < 100 && this.melee === null) {
-      this.melee = new Melee(this.game, this)
+    if (getDistance(this.center, this.game.player.center) < 80 && !this.isAttacking) {
+      this.startAttack()
     }
 
-    if (!this.isAttacking && Math.random() < this.attackChance) {
-      if (this.type === this.TYPES['2CHAINZ']) {
-        this.isAttacking = true
-        new Projectile(this.game, this, this.game.player)
-        playSound('twochainzAttack')
-      }
-    }
+    // if (!this.isAttacking && Math.random() < this.attackChance) {
+    //   if (this.type === this.TYPES['2CHAINZ']) {
+    //     new Projectile(this.game, this, this.game.player)
+    //     playSound('twochainzAttack')
+    //   }
+    // }
+
     if (this.isAttacking) {
-      if (this.type === this.TYPES['2CHAINZ']) {
-        if (this.attackFrame == 40) {
-          new Projectile(this.game, this, this.game.player)
-        }
+      if (this.attackFrame === 30) {
+        this.melee = new Melee(this.game, this)
       }
+
+      // if (this.type === this.TYPES['2CHAINZ']) {
+      //   if (this.attackFrame == 40) {
+      //     new Projectile(this.game, this, this.game.player)
+      //   }
+      // }
       this.attackFrame++
 
       if (this.attackFrame === 100) {
-        this.isAttacking = false
         this.attackFrame = 0
       }
     }
   }
 
-  takeDamage(damage) {
+  takeDamage(damage, opts) {
     this.health -= damage
 
     if (this.health <= 0) {
       this.game.updateScore(this.points)
       this.destroy()
+    }
+
+    if (!opts) return
+
+    if (opts.source && opts.knockback) {
+      let kb = getScaledVector(opts.source.center, this.center, opts.knockback)
+      this.center.x += kb.x
+      this.center.y += kb.y
     }
   }
 
@@ -102,15 +122,9 @@ export default class Enemy extends Entity {
 
     // move towards player
     let x = this.game.player.center.x
-    if (this.direction == DIRECTIONS.RIGHT) x -= this.size.x // go towards either side of player
-    else x += this.size.x
-    let dx = x - this.center.x
-    let dy = this.game.player.center.y - this.center.y
-    let hypotenuse = getDistance(this.center, {x, y: this.game.player.center.y})
-    this.vector = {
-      x: dx / hypotenuse * this.speed,
-      y: dy / hypotenuse * this.speed,
-    }
+    if (this.direction == DIRECTIONS.RIGHT) x -= (this.size.x + 10) // go towards either side of player
+    else x += (this.size.x + 10)
+    this.vector = getScaledVector(this.center, {x, y: this.game.player.center.y}, this.speed)
 
     this.center.x += this.vector.x
     this.center.y += this.vector.y

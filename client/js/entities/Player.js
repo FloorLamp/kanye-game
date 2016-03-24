@@ -54,7 +54,6 @@ export default class Player extends Entity {
   }
 
   get isAlive() {
-    return true
     return this.health > 0
   }
 
