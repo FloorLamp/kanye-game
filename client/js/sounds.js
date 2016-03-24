@@ -2,7 +2,7 @@ const SOUNDS = {
   titleScreen: require('../sounds/intro.mp3'),
   startGame: require('../sounds/startgame.mp3'),
   gameOver: require('../sounds/gameover-final.mp3'),
-  gameEnd: require('../sounds/gameend.mp3'),
+  gameEnd: require('../sounds/gameend-final.mp3'),
   endoflevel: [
     require('../sounds/endoflevel1.mp3'),
     require('../sounds/endoflevel2.mp3'),
