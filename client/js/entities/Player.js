@@ -54,7 +54,6 @@ export default class Player extends Entity {
   }
 
   get isAlive() {
-    // return true
     return this.health > 0
   }
 
@@ -120,8 +119,8 @@ export default class Player extends Entity {
   draw() {
     if (this.isInvincible && this.invincibilityFrame % 6 === 0) {}
     else {
-      if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this, require('../../img/kanyesprite.png'))
-      else drawSprite(this.game.screen, this, require('../../img/kanyespritereverse.png'))
+      if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this, require('../../img/kanyesprite.png'), 3)
+      else drawSprite(this.game.screen, this, require('../../img/kanyespritereverse.png'), 3)
     }
   }
 
