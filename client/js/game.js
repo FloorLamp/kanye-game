@@ -15,6 +15,7 @@ export default class Game {
     this.gameStarted = false
     this.playerScore = -53000000
     this.song = new Song(this, 'titleScreen')
+    this.song.stopSong() // REMOVE TO PLAY SONG
 
     this.bodies = {
       player: null,
@@ -122,17 +123,6 @@ export default class Game {
     }
     for (let body in this.bodies.objects) {
       this.bodies.objects[body].draw()
-    }
-
-    if (this.isLoss) {
-      this.screen.fillStyle = 'red'
-      this.screen.fillText('YOU LOSE', this.gameSize.x /2 , this.gameSize.y /2 )
-      this.screen.fillStyle = 'black'
-    }
-    if (this.gameEnded) {
-      this.screen.fillStyle = 'green'
-      this.screen.fillText('YOU WIN KIM!', this.gameSize.x /2 , this.gameSize.y /2 )
-      this.screen.fillStyle = 'black'
     }
   }
 }

@@ -1,5 +1,5 @@
 import { playSound } from '../sounds'
-import { drawRect } from '../Draw'
+import { drawRect, drawSprite } from '../Draw'
 import { KEYS, DIRECTIONS } from '../constants'
 
 import Entity from '../Entity'
@@ -54,7 +54,7 @@ export default class Player extends Entity {
   }
 
   get isAlive() {
-    return true
+    // return true
     return this.health > 0
   }
 
@@ -119,7 +119,10 @@ export default class Player extends Entity {
 
   draw() {
     if (this.isInvincible && this.invincibilityFrame % 6 === 0) {}
-    else drawRect(this.game.screen, this)
+    else {
+      if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this, require('../../img/kanyesprite.png'))
+      else drawSprite(this.game.screen, this, require('../../img/kanyespritereverse.png'))
+    }
   }
 
   destroy() {}
