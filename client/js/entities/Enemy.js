@@ -31,7 +31,7 @@ export default class Enemy extends Entity {
     this.center = opts.center
 
     // defaults
-    this.speed = 4
+    this.speed = 2
     this.vector = null
     this.points = 1000000
     this.maxHealth = 15
@@ -98,12 +98,18 @@ export default class Enemy extends Entity {
   }
 
   move() {
-    // randomly pick a vector
-    if (!this.vector) {
-      this.vector = {
-        x: (Math.random() - 1) * this.speed,
-        y: (Math.random() - 1) * this.speed,
-      }
+    this.direction = this.center.x < this.game.player.center.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
+
+    // move towards player
+    let x = this.game.player.center.x
+    if (this.direction == DIRECTIONS.RIGHT) x -= this.size.x // go towards either side of player
+    else x += this.size.x
+    let dx = x - this.center.x
+    let dy = this.game.player.center.y - this.center.y
+    let hypotenuse = getDistance(this.center, {x, y: this.game.player.center.y})
+    this.vector = {
+      x: dx / hypotenuse * this.speed,
+      y: dy / hypotenuse * this.speed,
     }
 
     this.center.x += this.vector.x
@@ -125,8 +131,6 @@ export default class Enemy extends Entity {
       this.center.y = this.game.gameSize.y - this.size.y / 2
       this.vector.y *= -1
     }
-
-    this.direction = this.center.x < this.game.player.center.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
 
   }
 

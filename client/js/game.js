@@ -76,7 +76,7 @@ export default class Game {
   }
 
   checkConditions() {
-    if (!this.gameStarted && this.player.isMoving()) {
+    if (!this.gameStarted && this.player.isMoving) {
       this.gameStarted = true
       this.song.playing = false
       this.song.stopSong()

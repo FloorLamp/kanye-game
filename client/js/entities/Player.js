@@ -44,15 +44,17 @@ export default class Player extends Entity {
     this.isDown = function(keyCode) {
       return keyState[keyCode] === true
     }
-    this.isMoving = function() {
-      return this.isDown(KEYS.LEFT) ||
-             this.isDown(KEYS.RIGHT) ||
-             this.isDown(KEYS.UP) ||
-             this.isDown(KEYS.DOWN);
-    }
+  }
+
+  get isMoving() {
+    return this.isDown(KEYS.LEFT) ||
+           this.isDown(KEYS.RIGHT) ||
+           this.isDown(KEYS.UP) ||
+           this.isDown(KEYS.DOWN)
   }
 
   get isAlive() {
+    return true
     return this.health > 0
   }
 
@@ -65,10 +67,11 @@ export default class Player extends Entity {
 
     this.health -= damage
 
-    if (this.health <= 0) {
+    if (!this.isAlive) {
       this.game.lose()
     }
 
+    // start invincibility
     this.invincibilityFrame++
   }
 
