@@ -1,14 +1,16 @@
-import { drawRect } from './Draw'
-import { playSound } from './sounds'
-import { getDistance } from './utils'
-import { DIRECTIONS } from './constants'
+import { drawRect } from '../Draw'
+import { playSound } from '../sounds'
+import { getDistance } from '../utils'
+import { DIRECTIONS } from '../constants'
 
-import Melee from './weapons/Melee'
-import Projectile from './weapons/Projectile'
+import Entity from '../Entity'
+import Melee from '../weapons/Melee'
+import Projectile from '../weapons/Projectile'
 
-export default class Enemy {
+export default class Enemy extends Entity {
+
   constructor(game, opts) {
-    this.game = game
+    super(game)
 
     this.id = opts.id || 'enemy' + Date.now().toString()
     this.game.bodies.enemies[this.id] = this
@@ -58,7 +60,7 @@ export default class Enemy {
   }
 
   attack() {
-    if (this.game.player.health <= 0) return
+    if (this.melee && this.game.bodies.objects[this.melee.id] === undefined) this.melee = null;
 
     if (getDistance(this.center, this.game.player.center) < 100 && this.melee === null) {
       this.melee = new Melee(this.game, this)
@@ -131,10 +133,6 @@ export default class Enemy {
   update() {
     this.attack()
     this.move()
-
-    if (this.melee) {
-      this.melee.update()
-    }
   }
 
   draw() {
@@ -156,4 +154,5 @@ export default class Enemy {
     this.game.enemyKilledCount++
     delete this.game.bodies.enemies[this.id]
   }
+
 }

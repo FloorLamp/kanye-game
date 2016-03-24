@@ -2,8 +2,8 @@ import { Song, playSound } from './sounds'
 
 import HUD from './HUD'
 
-import Enemy from './Enemy'
-import Player from './Player'
+import Enemy from './entities/Enemy'
+import Player from './entities/Player'
 
 export default class Game {
 
@@ -19,7 +19,7 @@ export default class Game {
     this.bodies = {
       player: null,
       enemies: {},
-      projectiles: {},
+      objects: {},
     }
 
     this.player = new Player(this)
@@ -97,21 +97,17 @@ export default class Game {
     this.song.updateSong('gameOver')
   }
 
-  // spawnEnemy() {
-  //   new Enemy(this)
-  // }
-
   update() {
     if (this.isLoss || this.gameEnded) return
 
     this.checkConditions()
 
     this.player.update()
-    for (var body in this.bodies.enemies) {
+    for (let body in this.bodies.enemies) {
       this.bodies.enemies[body].update()
     }
-    for (var body in this.bodies.projectiles) {
-      this.bodies.projectiles[body].update()
+    for (let body in this.bodies.objects) {
+      this.bodies.objects[body].update()
     }
   }
 
@@ -121,11 +117,11 @@ export default class Game {
     this.hud.draw()
 
     this.player.draw()
-    for (var body in this.bodies.enemies) {
+    for (let body in this.bodies.enemies) {
       this.bodies.enemies[body].draw()
     }
-    for (var body in this.bodies.projectiles) {
-      this.bodies.projectiles[body].draw()
+    for (let body in this.bodies.objects) {
+      this.bodies.objects[body].draw()
     }
 
     if (this.isLoss) {

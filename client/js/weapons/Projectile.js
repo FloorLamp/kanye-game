@@ -1,21 +1,12 @@
 import { isColliding, getDistance } from '../utils'
 import { drawRect } from '../Draw'
-import Player from '../Player'
 
-export default class Projectile {
+import Weapon from './Weapon'
+
+export default class Projectile extends Weapon {
+
   constructor(game, source, destination) {
-    this.game = game
-    this.sourceId = source.id
-
-    // determine who this damages
-    if (source instanceof Player) {
-      this.enemies = this.game.bodies.enemies
-    } else {
-      this.enemies = [this.game.player]
-    }
-
-    this.id = 'projectile' + Date.now().toString()
-    this.game.bodies.projectiles[this.id] = this
+    super(game, source, destination)
 
     this.size = {
       x: 5,
@@ -37,10 +28,6 @@ export default class Projectile {
     this.isActive = true
 
     this.damage = 2
-  }
-
-  destroy() {
-    delete this.game.bodies.projectiles[this.id]
   }
 
   update() {
@@ -75,5 +62,5 @@ export default class Projectile {
   draw() {
     drawRect(this.game.screen, this)
   }
-}
 
+}

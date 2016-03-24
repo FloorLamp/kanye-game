@@ -1,13 +1,16 @@
-import { playSound } from './sounds'
-import { drawRect } from './Draw'
-import { KEYS, DIRECTIONS } from './constants'
+import { playSound } from '../sounds'
+import { drawRect } from '../Draw'
+import { KEYS, DIRECTIONS } from '../constants'
 
-import Melee from './weapons/Melee'
+import Entity from '../Entity'
+import Melee from '../weapons/Melee'
 
-export default class Player {
+export default class Player extends Entity {
 
   constructor(game) {
-    this.game = game
+    super(game)
+
+    this.id = 'player'
 
     this.size = {
       x: 40,
@@ -22,7 +25,6 @@ export default class Player {
 
     this.speed = 5
 
-    this.isAlive = true
     this.maxHealth = 50
     this.health = this.maxHealth
     this.invincibilityFrame = 0
@@ -50,17 +52,20 @@ export default class Player {
     }
   }
 
-  isInvincible() {
+  get isAlive() {
+    return this.health > 0
+  }
+
+  get isInvincible() {
     return this.invincibilityFrame > 0
   }
 
   takeDamage(damage) {
-    if (this.isInvincible()) return
+    if (this.isInvincible) return
 
     this.health -= damage
 
     if (this.health <= 0) {
-      this.isAlive = false
       this.game.lose()
     }
 
@@ -70,10 +75,6 @@ export default class Player {
   startAttack() {
     this.melee = new Melee(this.game, this)
     playSound('kanyeFistAttack')
-  }
-
-  destroyChild(name) {
-    this[name] = null
   }
 
   move() {
@@ -97,17 +98,16 @@ export default class Player {
   update() {
     if (!this.isAlive) return
 
+    if (this.melee && this.game.bodies.objects[this.melee.id] === undefined) this.melee = null;
+
     if (this.isDown(KEYS.SPACE)) {
       if (this.melee === null) {
         this.startAttack()
       }
     }
-    if (this.melee) {
-      this.melee.update()
-    }
     this.move()
 
-    if (this.isInvincible()) {
+    if (this.isInvincible) {
       this.invincibilityFrame++
 
       if (this.invincibilityFrame > 30) this.invincibilityFrame = 0
@@ -115,11 +115,10 @@ export default class Player {
   }
 
   draw() {
-    if (this.isInvincible() && this.invincibilityFrame % 6 === 0) {}
+    if (this.isInvincible && this.invincibilityFrame % 6 === 0) {}
     else drawRect(this.game.screen, this)
-
-    if (this.melee && this.melee.isActive) {
-      this.melee.draw(this.game.screen)
-    }
   }
+
+  destroy() {}
+
 }

@@ -1,18 +1,12 @@
 import { isColliding } from '../utils'
 import { drawRect } from '../Draw'
-import Player from '../Player'
 
-export default class Melee {
-  constructor(game, owner) {
-    this.game = game
-    this.owner = owner
+import Weapon from './Weapon'
 
-    // determine who this damages
-    if (this.owner instanceof Player) {
-      this.enemies = this.game.bodies.enemies
-    } else {
-      this.enemies = [this.game.player]
-    }
+export default class Melee extends Weapon {
+
+  constructor(game, source) {
+    super(game, source)
 
     this.size = {
       x: 30,
@@ -27,10 +21,10 @@ export default class Melee {
     }
 
     this.center = {
-      x: this.owner.center.x,
-      y: this.owner.center.y,
+      x: this.source.center.x,
+      y: this.source.center.y,
     }
-    this.direction = this.owner.direction
+    this.direction = this.source.direction
 
     this.frame = 0
     this.isActive = true
@@ -39,18 +33,14 @@ export default class Melee {
     this.damage = 5
   }
 
-  destroy() {
-    this.owner.melee = null
-  }
-
   update() {
     if (this.frame === 5) this.direction *= -1
 
     if (this.frame < 10) {
       this.offset.x += this.direction * this.speed
 
-      this.center.x = this.owner.center.x + this.offset.x
-      this.center.y = this.owner.center.y + this.offset.y
+      this.center.x = this.source.center.x + this.offset.x
+      this.center.y = this.source.center.y + this.offset.y
 
     } else {
       this.isActive = false
@@ -59,7 +49,7 @@ export default class Melee {
     if (this.isActive) {
       // collision detection against enemies
       for (let enemyId in this.enemies) {
-        if (enemyId == this.owner.id || this.enemiesHit.has(enemyId)) continue
+        if (enemyId == this.source.id || this.enemiesHit.has(enemyId)) continue
 
         let enemy = this.enemies[enemyId]
 
@@ -78,6 +68,7 @@ export default class Melee {
   }
 
   draw() {
-    drawRect(this.game.screen, this)
+    if (this.isActive) drawRect(this.game.screen, this)
   }
+
 }
