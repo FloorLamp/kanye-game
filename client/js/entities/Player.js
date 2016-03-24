@@ -19,7 +19,7 @@ export default class Player extends Entity {
 
     this.center = {
       x: 100,
-      y: this.game.gameSize.y / 2
+      y: this.game.gameSize.y - 70
     }
     this.direction = DIRECTIONS.RIGHT
 

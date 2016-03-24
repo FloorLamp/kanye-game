@@ -23,7 +23,7 @@ export default class HUD {
     let width = this.game.player.health / this.game.player.maxHealth * maxWidth
 
     this.game.screen.fillStyle = 'green'
-    this.game.screen.fillRect(50, 20, width, 5)
+    this.game.screen.fillRect(50, 11, width, 20)
     this.game.screen.fillStyle = 'black'
   }
 
