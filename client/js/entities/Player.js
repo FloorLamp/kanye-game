@@ -28,8 +28,10 @@ export default class Player extends Entity {
     this.maxHealth = 50
     this.health = this.maxHealth
     this.invincibilityFrame = 0
+    this.attackCooldownFrame = 0
 
     this.melee = null
+    this.item = null
 
     var keyState = {}
 
@@ -75,8 +77,17 @@ export default class Player extends Entity {
   }
 
   startAttack() {
-    this.melee = new Melee(this.game, this)
-    playSound('kanyeFistAttack')
+    if (!this.item) {
+      this.melee = new Melee(this.game, this)
+      playSound('kanyeFistAttack')
+
+    } else if (this.item) {
+      this.item.use()
+    }
+  }
+
+  stopAttack() {
+    this.attackCooldownFrame++
   }
 
   move() {
