@@ -1,5 +1,5 @@
 import { isColliding, getDistance } from '../../utils'
-import { drawRect } from '../../Draw'
+import { drawRect, drawSprite } from '../../Draw'
 
 import Weapon from '../Weapon'
 
@@ -14,6 +14,8 @@ export default class Projectile extends Weapon {
     }
 
     this.speed = 6
+
+    this.sprite = null
 
     this.center = {
       x: source.center.x,
@@ -60,7 +62,8 @@ export default class Projectile extends Weapon {
   }
 
   draw() {
-    drawRect(this.game.screen, this)
+    if (this.sprite) drawSprite(this.game.screen, this, this.sprite, 6)
+    else drawRect(this.game.screen, this)
   }
 
 }

@@ -1,4 +1,4 @@
-import { drawRect } from './Draw'
+import { drawRect, drawSprite } from './Draw'
 
 export default class HUD {
 

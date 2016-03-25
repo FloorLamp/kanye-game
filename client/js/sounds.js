@@ -16,7 +16,8 @@ const SOUNDS = {
     require('../sounds/2chainz1.mp3'),
     require('../sounds/2chainz2.mp3'),
     require('../sounds/2chainzgetem.mp3')
-  ]
+  ],
+  maybachKeys: require('../sounds/maybachkeys.mp3')
 }
 
 export function playSound(sound, self) {
