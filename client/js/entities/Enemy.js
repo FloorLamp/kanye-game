@@ -4,12 +4,12 @@ import { getDistance, getScaledVector } from '../utils'
 import { DIRECTIONS } from '../constants'
 
 import Entity from '../Entity'
-import Item from '../Item'
+import Item from '../items/Item'
 import Melee from '../weapons/Melee'
 
 const LOOT_TABLE = _.pairs({
   MaybachKeys: .5,
-  // projectile2: .05,
+  SunglassesAdvil: .5,
   // projectile3: .1,
 })
 

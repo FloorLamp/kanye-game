@@ -76,6 +76,12 @@ export default class Player extends Entity {
     this.invincibilityFrame++
   }
 
+  heal(amount) {
+    this.health += amount
+    if (this.health > this.maxHealth)
+      this.health = this.maxHealth
+  }
+
   startAttack() {
     if (!this.item) {
       this.melee = new Melee(this.game, this)

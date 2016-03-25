@@ -1,8 +1,8 @@
-import { isColliding } from './utils'
-import { drawRect } from './Draw'
+import { isColliding } from '../utils'
+import { drawRect } from '../Draw'
 
-import Entity from './Entity'
-import MaybachKeys from './weapons/projectiles/MaybachKeys'
+import Entity from '../Entity'
+import MaybachKeys from '../weapons/projectiles/MaybachKeys'
 
 export default class Item extends Entity {
 
@@ -26,6 +26,12 @@ export default class Item extends Entity {
 
     this.type = opts.type
     this.count = 1
+
+    if (this.type === 'MaybachKeys') {
+      this.isCollectible = true
+    } else if (this.type === 'SunglassesAdvil') {
+      this.isCollectible = false
+    }
   }
 
   get isPickedUp() {
@@ -33,12 +39,23 @@ export default class Item extends Entity {
   }
 
   pickup() {
-    this.game.player.item = this
+    if (this.isCollectible) {
+      if (this.game.player.item) return false
+
+      this.game.player.item = this
+    }
+    else
+      this.use()
+
+    // return true if this needs to be deleted
+    return true
   }
 
   use() {
     if (this.type === 'MaybachKeys') {
       new MaybachKeys(this.game, this.game.player, this.game.mouse)
+    } else if (this.type === 'SunglassesAdvil') {
+      this.game.player.heal(10)
     }
 
     this.count--
@@ -48,8 +65,8 @@ export default class Item extends Entity {
 
   update() {
     if (isColliding(this, this.game.player)) {
-      this.pickup()
-      delete this.game.bodies.objects[this.id]
+      if (this.pickup())
+        delete this.game.bodies.objects[this.id]
     }
   }
 
