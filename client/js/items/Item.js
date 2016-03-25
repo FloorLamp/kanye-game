@@ -63,6 +63,7 @@ export default class Item extends Entity {
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x, y: this.game.player.center.y - 10}, {id: 'diamond-0'}) // up
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x - 10, y: this.game.player.center.y - 10}, {id: 'diamond-1'}) // left
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x + 10, y: this.game.player.center.y - 10}, {id: 'diamond-2'}) // right
+      playSound('diamonds')
 
     } else if (this.type === 'SunglassesAdvil') {
       this.game.player.heal(10)
