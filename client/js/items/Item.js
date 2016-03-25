@@ -76,9 +76,14 @@ export default class Item extends Entity {
       new MaybachKeys(this.game, this.game.player, this.game.mouse)
 
     } else if (this.type === 'Diamonds') {
-      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x, y: this.game.player.center.y - 10}, {id: 'diamond-0'}) // up
-      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x - 10, y: this.game.player.center.y - 10}, {id: 'diamond-1'}) // left
-      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x + 10, y: this.game.player.center.y - 10}, {id: 'diamond-2'}) // right
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x, y: this.game.player.center.y - 1}) // N
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x - 1, y: this.game.player.center.y - 1}) // NW
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x - 1, y: this.game.player.center.y}) // W
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x - 1, y: this.game.player.center.y + 1}) // SW
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x, y: this.game.player.center.y + 1}) // S
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x + 1, y: this.game.player.center.y + 1}) // SE
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x + 1, y: this.game.player.center.y}) // E
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x + 1, y: this.game.player.center.y - 1}) // NE
 
     } else if (this.type === 'SunglassesAdvil') {
       this.game.player.heal(10)

@@ -7,19 +7,6 @@ import Entity from '../Entity'
 import Item from '../items/Item'
 import Melee from '../weapons/Melee'
 
-const LOOT_TABLE = _.pairs({
-  MaybachKeys: .4,
-  SunglassesAdvil: .3,
-  Diamonds: .4,
-})
-
-let getLoot = () => {
-  let rand = Math.random()
-  let loots = _.filter(LOOT_TABLE, (item) => rand <= item[1])
-  if (!loots.length) return null
-  return _.sample(loots)[0]
-}
-
 export default class Enemy extends Entity {
 
   constructor(game, opts) {
@@ -61,27 +48,25 @@ export default class Enemy extends Entity {
     this.attackFrame = 0
     this.melee = null
     this.drawColor = 'black'
+    this.takesKnockback = true
 
-    this.TYPES = {
-      '2CHAINZ': 0,
-    }
+    this.lootTable = _.pairs({
+      MaybachKeys: .4,
+      SunglassesAdvil: .3,
+      Diamonds: .2,
+    })
 
-    if (!opts.type) {
-      // var rand = Math.random()
-      // if (rand < .5) opts.type = this.TYPES['2CHAINZ']
-    }
-    this.type = opts.types
-
-    if (this.type === this.TYPES['2CHAINZ']) {
-      this.speed = 3
-      this.attackChance = .05
-      // this.projectileSpeed = 3
-      // this.projectileDamage = 3
-    }
   }
 
   get isAttacking() {
     return this.attackFrame > 0
+  }
+
+  getLoot() {
+    let rand = Math.random()
+    let loots = _.filter(this.lootTable, (item) => rand <= item[1])
+    if (!loots.length) return null
+    return _.sample(loots)[0]
   }
 
   startAttack() {
@@ -122,7 +107,7 @@ export default class Enemy extends Entity {
 
     if (!opts) return
 
-    if (opts.source && opts.knockback) {
+    if (opts.source && opts.knockback && this.takesKnockback) {
       let kb = getScaledVector(opts.source.center, this.center, opts.knockback)
       this.center.x += kb.x
       this.center.y += kb.y
@@ -184,7 +169,7 @@ export default class Enemy extends Entity {
   }
 
   destroy() {
-    let loot = getLoot()
+    let loot = this.getLoot()
     if (loot) new Item(this.game, {type: loot, source: this})
 
     this.game.enemyKilledCount++

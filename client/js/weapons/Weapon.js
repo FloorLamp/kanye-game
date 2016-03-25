@@ -11,7 +11,7 @@ export default class Weapon extends Entity {
 
     if (!opts) opts = {}
 
-    this.id = opts.id || `weapon-${Date.now()}`
+    this.id = opts.id || `weapon-${Math.random()}`
 
     if (source) {
       this.source = source

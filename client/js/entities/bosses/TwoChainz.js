@@ -19,8 +19,14 @@ export default class TwoChainz extends Enemy {
     this.attackChance = .02
     this.maxHealth = 25
     this.health = this.maxHealth
+    this.takesKnockback = false
 
     this.vector = getScaledVector(this.center, {x: Math.random() - 1, y: Math.random() - 1}, this.speed)
+
+    this.lootTable = _.pairs({
+      SunglassesAdvil: .7,
+      Diamonds: .7,
+    })
   }
 
   move() {
