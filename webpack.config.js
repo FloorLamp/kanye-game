@@ -24,7 +24,7 @@ var plugins = [
   new webpack.optimize.OccurenceOrderPlugin(true),
   new webpack.ProvidePlugin({
     '_': 'lodash',
-    moment: 'moment',
+    // moment: 'moment',
   }),
   new webpack.NoErrorsPlugin()
 ];

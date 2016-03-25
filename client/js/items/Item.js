@@ -41,6 +41,7 @@ export default class Item extends Entity {
         this.sprite = require('../../img/maybachkey.png')
         this.spriteScale = 4
         this.sound = 'maybachKeys'
+        this.count = 2
         break
       case 'Diamonds':
         this.sprite = require('../../img/diamond.png')
@@ -60,9 +61,12 @@ export default class Item extends Entity {
 
   pickup() {
     if (this.isCollectible) {
-      if (this.game.player.item) return false
+      if (this.game.player.item) {
+        if (this.game.player.item.type !== this.type) return false
 
-      this.game.player.item = this
+        this.game.player.item.count += this.count
+      }
+      else this.game.player.item = this
     }
     else
       this.use()
@@ -113,8 +117,16 @@ export default class Item extends Entity {
       drawSprite(this.game.screen, pos, this.sprite, this.spriteScale)
     } else {
       this.game.screen.font = '8px sans-serif'
+      this.game.screen.fillStyle = 'black'
       this.game.screen.fillText(this.type, pos.x, pos.y)
     }
+
+    if (this.isPickedUp && this.count > 1) {
+      this.game.screen.font = '12px sans-serif'
+      this.game.screen.fillStyle = 'white'
+      this.game.screen.fillText(this.count, pos.x - 20, pos.y - 12)
+    }
+
   }
 
   destroy() {

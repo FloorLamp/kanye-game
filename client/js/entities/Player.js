@@ -49,6 +49,10 @@ export default class Player extends Entity {
       keyState[e.keyCode] = false
     })
 
+    window.addEventListener('mouseup', (e) => {
+      this.clicked = true
+    })
+
     this.isDown = function(keyCode) {
       return keyState[keyCode] === true
     }
@@ -89,13 +93,8 @@ export default class Player extends Entity {
   }
 
   startAttack() {
-    if (!this.item) {
-      this.melee = new Melee(this.game, this)
-      playSound('kanyeFistAttack')
-
-    } else if (this.item) {
-      this.item.use()
-    }
+    this.melee = new Melee(this.game, this)
+    playSound('kanyeFistAttack')
   }
 
   stopAttack() {
@@ -130,6 +129,11 @@ export default class Player extends Entity {
         this.startAttack()
       }
     }
+    if (this.clicked) {
+      this.clicked = false
+      if (this.item) this.item.use()
+    }
+
     this.move()
 
     if (this.isInvincible) {
