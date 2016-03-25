@@ -1,4 +1,4 @@
-import { drawRect, drawSprite } from './Draw'
+import { drawRect } from './Draw'
 
 export default class HUD {
 
@@ -31,9 +31,7 @@ export default class HUD {
     if (!this.game.player.item) return
 
     this.game.screen.strokeRect(385, 10, 50, 50)
-    this.game.screen.font = '8px sans-serif'
-    this.game.screen.fillText(this.game.player.item.type, 400, 30)
-    this.game.screen.font = '25px Arial'
+    this.game.player.item.draw()
   }
 
   drawScore() {

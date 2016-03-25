@@ -4,13 +4,13 @@ export function drawRect(screen, body) {
   screen.fillRect(body.center.x - body.size.x / 2, body.center.y - body.size.y / 2,
                   body.size.x, body.size.y)
 }
-export function drawSprite(screen, body, image, scale) {
-
-  var sprite = new Image()
+export function drawSprite(screen, center, image, scale) {
+  if (!scale) scale = 1
+  let sprite = new Image()
   sprite.src = image
 
-  var width = sprite.naturalWidth / scale
-  var height = sprite.naturalHeight / scale
+  let width = sprite.naturalWidth / scale
+  let height = sprite.naturalHeight / scale
 
-  screen.drawImage(sprite, body.center.x - body.size.x / 2, body.center.y - body.size.y / 2, width, height )
+  screen.drawImage(sprite, center.x - width / 2, center.y - height / 2, width, height)
 }

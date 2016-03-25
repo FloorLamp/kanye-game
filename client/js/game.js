@@ -3,6 +3,7 @@ import { Song, playSound } from './sounds'
 import HUD from './HUD'
 
 import Enemy from './entities/Enemy'
+import TwoChainz from './entities/bosses/TwoChainz'
 import Player from './entities/Player'
 
 export default class Game {
@@ -56,7 +57,7 @@ export default class Game {
     if (this.level !== 1 && !this.gameEnded) playSound('endoflevel')
 
     setTimeout(() => {
-      for (var i = 0; i < this.level; i++) {
+      for (var i = 0; i < this.level * 3; i++) {
         new Enemy(this);
       }
     }, 1000)
@@ -66,8 +67,8 @@ export default class Game {
       }
     }, 5000)
     setTimeout(() => {
-      for (var i = 0; i < this.level * 3; i++) {
-        new Enemy(this);
+      for (var i = 0; i < this.level; i++) {
+        new TwoChainz(this);
       }
     }, 10000)
 

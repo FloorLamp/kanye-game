@@ -12,6 +12,12 @@ export default class Player extends Entity {
 
     this.id = 'player'
 
+    this.sprites = {
+      normal: require('../../img/kanyesprite.png'),
+      reverse: require('../../img/kanyespritereverse.png'),
+    }
+    this.spriteScale = 3
+
     this.size = {
       x: 40,
       y: 80
@@ -136,8 +142,8 @@ export default class Player extends Entity {
   draw() {
     if (this.isInvincible && this.invincibilityFrame % 6 === 0) {}
     else {
-      if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this, require('../../img/kanyesprite.png'), 3)
-      else drawSprite(this.game.screen, this, require('../../img/kanyespritereverse.png'), 3)
+      if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this.center, this.sprites.normal, this.spriteScale)
+      else drawSprite(this.game.screen, this.center, this.sprites.reverse, this.spriteScale)
     }
   }
 

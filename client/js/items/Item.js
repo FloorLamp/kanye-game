@@ -17,8 +17,8 @@ export default class Item extends Entity {
     this.game.bodies.objects[this.id] = this
 
     this.size = {
-      x: 5,
-      y: 5
+      x: 10,
+      y: 10
     }
 
     this.center = {
@@ -34,6 +34,23 @@ export default class Item extends Entity {
       this.isCollectible = true
     } else if (this.type === 'SunglassesAdvil') {
       this.isCollectible = false
+    }
+
+    switch (this.type) {
+      case 'MaybachKeys':
+        this.sprite = require('../../img/maybachkey.png')
+        this.spriteScale = 4
+        this.sound = 'maybachKeys'
+        break
+      case 'Diamonds':
+        this.sprite = require('../../img/diamond.png')
+        this.spriteScale = 12
+        this.sound = 'diamonds'
+        break
+      case 'SunglassesAdvil':
+        this.sprite = require('../../img/sunglasses.png')
+        this.sound = 'sunglasses'
+        break
     }
   }
 
@@ -57,18 +74,17 @@ export default class Item extends Entity {
   use() {
     if (this.type === 'MaybachKeys') {
       new MaybachKeys(this.game, this.game.player, this.game.mouse)
-      playSound('maybachKeys')
 
     } else if (this.type === 'Diamonds') {
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x, y: this.game.player.center.y - 10}, {id: 'diamond-0'}) // up
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x - 10, y: this.game.player.center.y - 10}, {id: 'diamond-1'}) // left
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x + 10, y: this.game.player.center.y - 10}, {id: 'diamond-2'}) // right
-      playSound('diamonds')
 
     } else if (this.type === 'SunglassesAdvil') {
       this.game.player.heal(10)
-      playSound('sunglasses')
     }
+
+    if (this.sound) playSound(this.sound)
 
     this.count--
     if (this.count <= 0)
@@ -83,15 +99,16 @@ export default class Item extends Entity {
   }
 
   draw() {
-    if (!this.isPickedUp) {
-      if (this.type === 'MaybachKeys') {
-        drawSprite(this.game.screen, this, require('../../img/maybachkey.png'), 4)
-      }else if (this.type === 'SunglassesAdvil') {
-        drawSprite(this.game.screen, this, require('../../img/sunglasses.png'), 1)
-      } else {
-        this.game.screen.font = '8px sans-serif'
-        this.game.screen.fillText(this.type, this.center.x, this.center.y)
-      }
+    let pos = this.center
+    if (this.isPickedUp) {
+      pos = {x: 410, y: 35}
+    }
+
+    if (this.sprite) {
+      drawSprite(this.game.screen, pos, this.sprite, this.spriteScale)
+    } else {
+      this.game.screen.font = '8px sans-serif'
+      this.game.screen.fillText(this.type, pos.x, pos.y)
     }
   }
 

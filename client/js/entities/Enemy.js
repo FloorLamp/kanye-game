@@ -8,9 +8,9 @@ import Item from '../items/Item'
 import Melee from '../weapons/Melee'
 
 const LOOT_TABLE = _.pairs({
-  MaybachKeys: .5,
-  SunglassesAdvil: .5,
-  Diamonds: .5,
+  MaybachKeys: .4,
+  SunglassesAdvil: .3,
+  Diamonds: .4,
 })
 
 let getLoot = () => {
@@ -26,6 +26,12 @@ export default class Enemy extends Entity {
     super(game)
 
     if (opts === undefined) opts = {}
+
+    this.sprites = {
+      normal: require('../../img/twochainz.png'),
+      reverse: require('../../img/twochainzreverse.png'),
+    }
+    this.spriteScale = 4
 
     this.id = opts.id || 'enemy' + Math.random()
     this.game.bodies.enemies[this.id] = this
@@ -90,26 +96,14 @@ export default class Enemy extends Entity {
 
     }
 
-    // if (!this.isAttacking && Math.random() < this.attackChance) {
-    //   if (this.type === this.TYPES['2CHAINZ']) {
-    //     new Projectile(this.game, this, this.game.player.center)
-    //     playSound('twochainzAttack')
-    //   }
-    // }
-
     if (this.isAttacking) {
       if (this.attackFrame === 15) this.drawColor = 'red'
       if (this.attackFrame === 30) {
         this.melee = new Melee(this.game, this)
         this.drawColor = 'black'
-        playSound('twochainzAttack')
+        // playSound('twochainzAttack')
       }
 
-      // if (this.type === this.TYPES['2CHAINZ']) {
-      //   if (this.attackFrame == 40) {
-      //     new Projectile(this.game, this, this.game.player.center)
-      //   }
-      // }
       this.attackFrame++
 
       if (this.attackFrame === 100) {
@@ -135,9 +129,11 @@ export default class Enemy extends Entity {
     }
   }
 
-  move() {
-    this.direction = this.center.x < this.game.player.center.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
+  get direction() {
+    return this.center.x < this.game.player.center.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
+  }
 
+  move() {
     // move towards player
     let x = this.game.player.center.x
     if (this.direction == DIRECTIONS.RIGHT) x -= (this.size.x + 10) // go towards either side of player
@@ -172,8 +168,9 @@ export default class Enemy extends Entity {
   }
 
   draw() {
-    if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this, require('../../img/twochainz.png'), 4)
-    else drawSprite(this.game.screen, this, require('../../img/twochainzreverse.png'), 4)
+    if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this.center, this.sprites.normal, this.spriteScale)
+    else drawSprite(this.game.screen, this.center, this.sprites.reverse, this.spriteScale)
+
     if (this.health < this.maxHealth) {
       this.game.screen.fillStyle = 'green'
       let width = this.health / this.maxHealth * this.size.x

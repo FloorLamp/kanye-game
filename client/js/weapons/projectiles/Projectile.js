@@ -58,7 +58,7 @@ export default class Projectile extends Weapon {
   }
 
   draw() {
-    if (this.sprite) drawSprite(this.game.screen, this, this.sprite, this.scale)
+    if (this.sprite) drawSprite(this.game.screen, this.center, this.sprite, this.spriteScale)
     else drawRect(this.game.screen, this)
   }
 
