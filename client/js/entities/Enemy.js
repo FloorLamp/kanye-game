@@ -4,8 +4,21 @@ import { getDistance, getScaledVector } from '../utils'
 import { DIRECTIONS } from '../constants'
 
 import Entity from '../Entity'
+import Item from '../Item'
 import Melee from '../weapons/Melee'
-import Projectile from '../weapons/Projectile'
+
+const LOOT_TABLE = _.pairs({
+  projectile: .5,
+  // projectile2: .05,
+  // projectile3: .1,
+})
+
+let getLoot = () => {
+  let rand = Math.random()
+  let loots = _.filter(LOOT_TABLE, (item) => rand <= item[1])
+  if (!loots.length) return null
+  return _.sample(loots)[0]
+}
 
 export default class Enemy extends Entity {
 
@@ -79,7 +92,7 @@ export default class Enemy extends Entity {
 
     // if (!this.isAttacking && Math.random() < this.attackChance) {
     //   if (this.type === this.TYPES['2CHAINZ']) {
-    //     new Projectile(this.game, this, this.game.player)
+    //     new Projectile(this.game, this, this.game.player.center)
     //     playSound('twochainzAttack')
     //   }
     // }
@@ -94,7 +107,7 @@ export default class Enemy extends Entity {
 
       // if (this.type === this.TYPES['2CHAINZ']) {
       //   if (this.attackFrame == 40) {
-      //     new Projectile(this.game, this, this.game.player)
+      //     new Projectile(this.game, this, this.game.player.center)
       //   }
       // }
       this.attackFrame++
@@ -174,6 +187,9 @@ export default class Enemy extends Entity {
   }
 
   destroy() {
+    let loot = getLoot()
+    if (loot) new Item(this.game, {type: loot, source: this})
+
     this.game.enemyKilledCount++
     delete this.game.bodies.enemies[this.id]
   }

@@ -27,3 +27,7 @@ export function getScaledVector(source, dest, scale) {
     y: y / hypotenuse * scale,
   }
 }
+
+export function sample(arr) {
+  return arr[Math.floor(Math.random() * arr.length)]
+}

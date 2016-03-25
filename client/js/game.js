@@ -23,6 +23,7 @@ export default class Game {
       objects: {},
     }
 
+
     this.player = new Player(this)
     this.hud = new HUD(this)
 
@@ -39,6 +40,15 @@ export default class Game {
       requestAnimationFrame(tick)
     }
     tick()
+
+    this.mouse = {
+      x: 0,
+      y: 0,
+    }
+    canvas.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.offsetX
+      this.mouse.y = e.offsetY
+    })
   }
 
   nextLevel() {

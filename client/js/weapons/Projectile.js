@@ -6,7 +6,7 @@ import Weapon from './Weapon'
 export default class Projectile extends Weapon {
 
   constructor(game, source, destination) {
-    super(game, source, destination)
+    super(game, source)
 
     this.size = {
       x: 5,
@@ -19,15 +19,15 @@ export default class Projectile extends Weapon {
       x: source.center.x,
       y: source.center.y,
     }
-    var distance = getDistance(source.center, destination.center)
+    var distance = getDistance(source.center, destination)
     this.vector = {
-      x: (destination.center.x - this.center.x) / distance * this.speed,
-      y: (destination.center.y - this.center.y) / distance * this.speed,
+      x: (destination.x - this.center.x) / distance * this.speed,
+      y: (destination.y - this.center.y) / distance * this.speed,
     }
 
     this.isActive = true
 
-    this.damage = 2
+    this.damage = 10
   }
 
   update() {

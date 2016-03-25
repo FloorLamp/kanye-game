@@ -27,6 +27,15 @@ export default class HUD {
     this.game.screen.fillStyle = 'black'
   }
 
+  drawItem() {
+    if (!this.game.player.item) return
+
+    this.game.screen.strokeRect(385, 10, 50, 50)
+    this.game.screen.font = '8px sans-serif'
+    this.game.screen.fillText(this.game.player.item.type, 400, 30)
+    this.game.screen.font = '25px Arial'
+  }
+
   drawScore() {
     this.game.screen.font = this.DEFAULT_FONT
     var scoreModifier = '-'
@@ -37,7 +46,18 @@ export default class HUD {
       this.game.screen.fillStyle = 'red'
     }
     this.game.screen.fillText(scoreModifier + '$' + Math.abs(this.game.playerScore).toString(), canvas.width - 145, canvas.height - 570)
+  }
 
+  drawMessage() {
+    this.game.screen.font = '25px Arial'
+    if (this.game.isLoss) {
+      this.game.screen.fillStyle = 'red'
+      this.game.screen.fillText('YOU LOSE', this.game.gameSize.x /2 , this.game.gameSize.y /2 )
+    }
+    if (this.game.gameEnded) {
+      this.game.screen.fillStyle = 'green'
+      this.game.screen.fillText('YOU WIN KIM!', this.game.gameSize.x /2 , this.game.gameSize.y /2 )
+    }
     this.game.screen.fillStyle = 'black'
   }
 
@@ -47,17 +67,6 @@ export default class HUD {
       gameoverKanyeImage.src = require('../img/kanyegameover.png');
 
       this.game.screen.drawImage(gameoverKanyeImage, (this.game.gameSize.x /2) - 150 , (this.game.gameSize.y /2) - 200)
-
-      this.game.screen.font = '40px Arial'
-      this.game.screen.fillStyle = 'red'
-      this.game.screen.fillText('YOU LOSE', (this.game.gameSize.x /2) - 100 , (this.game.gameSize.y /2) + 200)
-      this.game.screen.font = this.DEFAULT_FONT
-      this.game.screen.fillStyle = 'black'
-    }
-    if (this.game.gameEnded) {
-      this.game.screen.fillStyle = 'green'
-      this.game.screen.fillText('YOU WIN KIM!', this.game.gameSize.x /2 , this.game.gameSize.y /2 )
-      this.game.screen.fillStyle = 'black'
     }
   }
 
@@ -65,6 +74,8 @@ export default class HUD {
     this.drawLevel()
     this.drawScore()
     this.drawHealth()
-    this.drawResult()
+    this.drawItem()
+
+    this.drawMessage()
   }
 }

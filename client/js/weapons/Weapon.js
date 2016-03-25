@@ -1,11 +1,10 @@
 import { drawRect } from '../Draw'
 
-import Player from '../entities/Player'
 import Entity from '../Entity'
 
 export default class Weapon extends Entity {
 
-  constructor(game, source, destination) {
+  constructor(game, source) {
     if (new.target === Weapon) throw new TypeError()
 
     super(game)
@@ -17,7 +16,7 @@ export default class Weapon extends Entity {
       this.sourceId = source.id
 
       // determine who this damages
-      if (this.source instanceof Player) {
+      if (this.source.id === 'player') {
         this.enemies = this.game.bodies.enemies
       } else {
         this.enemies = [this.game.player]

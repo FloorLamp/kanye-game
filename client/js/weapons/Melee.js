@@ -1,7 +1,6 @@
 import { isColliding } from '../utils'
 import { drawRect } from '../Draw'
 
-import Player from '../entities/Player'
 import Weapon from './Weapon'
 
 export default class Melee extends Weapon {
@@ -57,7 +56,7 @@ export default class Melee extends Weapon {
 
         if (isColliding(this, enemy)) {
           this.enemiesHit.add(enemyId)
-          enemy.takeDamage(this.damage, !(enemy instanceof Player) ? {source: this.source, knockback: this.knockback} : null)
+          enemy.takeDamage(this.damage, {source: this.source, knockback: this.knockback})
         }
       }
     }
