@@ -2,7 +2,7 @@ import { isColliding } from './utils'
 import { drawRect } from './Draw'
 
 import Entity from './Entity'
-import Projectile from './weapons/Projectile'
+import MaybachKeys from './weapons/projectiles/MaybachKeys'
 
 export default class Item extends Entity {
 
@@ -37,8 +37,8 @@ export default class Item extends Entity {
   }
 
   use() {
-    if (this.type === 'projectile') {
-      new Projectile(this.game, this.game.player, this.game.mouse)
+    if (this.type === 'MaybachKeys') {
+      new MaybachKeys(this.game, this.game.player, this.game.mouse)
     }
 
     this.count--

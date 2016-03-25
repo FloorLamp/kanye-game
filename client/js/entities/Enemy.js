@@ -8,7 +8,7 @@ import Item from '../Item'
 import Melee from '../weapons/Melee'
 
 const LOOT_TABLE = _.pairs({
-  projectile: .5,
+  MaybachKeys: .5,
   // projectile2: .05,
   // projectile3: .1,
 })
