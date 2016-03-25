@@ -1,7 +1,7 @@
-import { isColliding, getDistance } from '../utils'
-import { drawRect } from '../Draw'
+import { isColliding, getDistance } from '../../utils'
+import { drawRect } from '../../Draw'
 
-import Weapon from './Weapon'
+import Weapon from '../Weapon'
 
 export default class Projectile extends Weapon {
 
