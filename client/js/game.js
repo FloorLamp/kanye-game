@@ -55,30 +55,22 @@ export default class Game {
     this.level++
     if (this.level !== 1 && !this.gameEnded) playSound('endoflevel')
 
-    if (this.level === 1) {
-      setTimeout(() => {
-        for (var i = 0; i < 2; i++) {
-          new Enemy(this, {id: `11${i}`});
-        }
-      }, 1000)
-      setTimeout(() => {
-        for (var i = 0; i < 5; i++) {
-          new Enemy(this, {id: `12${i}`});
-        }
-      }, 10000)
+    setTimeout(() => {
+      for (var i = 0; i < this.level; i++) {
+        new Enemy(this);
+      }
+    }, 1000)
+    setTimeout(() => {
+      for (var i = 0; i < this.level * 2; i++) {
+        new Enemy(this);
+      }
+    }, 5000)
+    setTimeout(() => {
+      for (var i = 0; i < this.level * 3; i++) {
+        new Enemy(this);
+      }
+    }, 10000)
 
-    } else if (this.level === 2) {
-      setTimeout(() => {
-        for (var i = 0; i < 3; i++) {
-          new Enemy(this, {id: `11${i}`});
-        }
-      }, 1000)
-      setTimeout(() => {
-        for (var i = 0; i < 6; i++) {
-          new Enemy(this, {id: `12${i}`});
-        }
-      }, 10000)
-    }
   }
 
   endGame() {
@@ -95,8 +87,7 @@ export default class Game {
     }
 
     if (this.gameStarted && this.level === 0) this.nextLevel();
-    else if (this.level === 1 && this.enemyKilledCount === 7) this.nextLevel()
-    else if (this.level === 2 && this.enemyKilledCount === 16) this.endGame()
+    else if (this.level >= 1 && this.enemyKilledCount === _.sum(_.range(this.level + 1)) * 6) this.nextLevel()
   }
 
   updateScore(change) {

@@ -4,12 +4,14 @@ import Entity from '../Entity'
 
 export default class Weapon extends Entity {
 
-  constructor(game, source) {
+  constructor(game, source, opts) {
     if (new.target === Weapon) throw new TypeError()
 
     super(game)
 
-    this.id = `weapon-${Date.now()}`
+    if (!opts) opts = {}
+
+    this.id = opts.id || `weapon-${Date.now()}`
 
     if (source) {
       this.source = source

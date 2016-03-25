@@ -10,7 +10,7 @@ import Melee from '../weapons/Melee'
 const LOOT_TABLE = _.pairs({
   MaybachKeys: .5,
   SunglassesAdvil: .5,
-  // projectile3: .1,
+  Diamonds: .5,
 })
 
 let getLoot = () => {
@@ -27,7 +27,7 @@ export default class Enemy extends Entity {
 
     if (opts === undefined) opts = {}
 
-    this.id = opts.id || 'enemy' + Date.now().toString()
+    this.id = opts.id || 'enemy' + Math.random()
     this.game.bodies.enemies[this.id] = this
     this.game.enemySpawnCount++
 
@@ -191,6 +191,7 @@ export default class Enemy extends Entity {
     if (loot) new Item(this.game, {type: loot, source: this})
 
     this.game.enemyKilledCount++
+    console.log(this.id, this.game.enemyKilledCount);
     delete this.game.bodies.enemies[this.id]
   }
 

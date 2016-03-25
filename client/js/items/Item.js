@@ -4,6 +4,7 @@ import { playSound } from '../sounds'
 
 import Entity from '../Entity'
 import MaybachKeys from '../weapons/projectiles/MaybachKeys'
+import Diamonds from '../weapons/projectiles/Diamonds'
 
 export default class Item extends Entity {
 
@@ -28,7 +29,8 @@ export default class Item extends Entity {
     this.type = opts.type
     this.count = 1
 
-    if (this.type === 'MaybachKeys') {
+    if (this.type === 'MaybachKeys' ||
+        this.type === 'Diamonds') {
       this.isCollectible = true
     } else if (this.type === 'SunglassesAdvil') {
       this.isCollectible = false
@@ -56,6 +58,12 @@ export default class Item extends Entity {
     if (this.type === 'MaybachKeys') {
       new MaybachKeys(this.game, this.game.player, this.game.mouse)
       playSound('maybachKeys')
+
+    } else if (this.type === 'Diamonds') {
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x, y: this.game.player.center.y - 10}, {id: 'diamond-0'}) // up
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x - 10, y: this.game.player.center.y - 10}, {id: 'diamond-1'}) // left
+      new Diamonds(this.game, this.game.player, {x: this.game.player.center.x + 10, y: this.game.player.center.y - 10}, {id: 'diamond-2'}) // right
+
     } else if (this.type === 'SunglassesAdvil') {
       this.game.player.heal(10)
       playSound('sunglasses')
