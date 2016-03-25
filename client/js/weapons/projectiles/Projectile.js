@@ -1,33 +1,29 @@
-import { isColliding, getDistance } from '../../utils'
+import { isColliding, getScaledVector } from '../../utils'
 import { drawRect } from '../../Draw'
 
 import Weapon from '../Weapon'
 
 export default class Projectile extends Weapon {
 
-  constructor(game, source, destination) {
-    super(game, source)
+  constructor(game, source, destination, opts) {
+    super(game, source, opts)
 
     this.size = {
       x: 5,
       y: 5
     }
 
-    this.speed = 6
+    this.speed = 5
 
     this.center = {
       x: source.center.x,
       y: source.center.y,
     }
-    var distance = getDistance(source.center, destination)
-    this.vector = {
-      x: (destination.x - this.center.x) / distance * this.speed,
-      y: (destination.y - this.center.y) / distance * this.speed,
-    }
+    this.vector = getScaledVector(source.center, destination, this.speed)
 
     this.isActive = true
 
-    this.damage = 10
+    this.damage = 5
   }
 
   update() {
