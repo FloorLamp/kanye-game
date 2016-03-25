@@ -1,5 +1,6 @@
 import { isColliding } from '../utils'
-import { drawRect } from '../Draw'
+import { drawRect, drawSprite } from '../Draw'
+import { playSound } from '../sounds'
 
 import Entity from '../Entity'
 import MaybachKeys from '../weapons/projectiles/MaybachKeys'
@@ -54,8 +55,10 @@ export default class Item extends Entity {
   use() {
     if (this.type === 'MaybachKeys') {
       new MaybachKeys(this.game, this.game.player, this.game.mouse)
+      playSound('maybachKeys')
     } else if (this.type === 'SunglassesAdvil') {
       this.game.player.heal(10)
+      playSound('sunglasses')
     }
 
     this.count--
@@ -72,8 +75,14 @@ export default class Item extends Entity {
 
   draw() {
     if (!this.isPickedUp) {
-      this.game.screen.font = '8px sans-serif'
-      this.game.screen.fillText(this.type, this.center.x, this.center.y)
+      if (this.type === 'MaybachKeys') {
+        drawSprite(this.game.screen, this, require('../../img/maybachkey.png'), 4)
+      }else if (this.type === 'SunglassesAdvil') {
+        drawSprite(this.game.screen, this, require('../../img/sunglasses.png'), 1)
+      } else {
+        this.game.screen.font = '8px sans-serif'
+        this.game.screen.fillText(this.type, this.center.x, this.center.y)
+      }
     }
   }
 

@@ -10,6 +10,7 @@ h1 {
 
 canvas {
   border: 1px solid black;
+  background-image: url('../img/kanyestage-test.jpg');
   width: 800px;
   height: 600px;
 }

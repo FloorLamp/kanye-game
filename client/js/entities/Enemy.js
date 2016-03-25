@@ -1,4 +1,4 @@
-import { drawRect } from '../Draw'
+import { drawRect, drawSprite } from '../Draw'
 import { playSound } from '../sounds'
 import { getDistance, getScaledVector } from '../utils'
 import { DIRECTIONS } from '../constants'
@@ -54,6 +54,7 @@ export default class Enemy extends Entity {
     this.attackChance = 0
     this.attackFrame = 0
     this.melee = null
+    this.drawColor = 'black'
 
     this.TYPES = {
       '2CHAINZ': 0,
@@ -86,6 +87,7 @@ export default class Enemy extends Entity {
 
     if (getDistance(this.center, this.game.player.center) < 80 && !this.isAttacking) {
       this.startAttack()
+
     }
 
     // if (!this.isAttacking && Math.random() < this.attackChance) {
@@ -96,8 +98,11 @@ export default class Enemy extends Entity {
     // }
 
     if (this.isAttacking) {
+      if (this.attackFrame === 15) this.drawColor = 'red'
       if (this.attackFrame === 30) {
         this.melee = new Melee(this.game, this)
+        this.drawColor = 'black'
+        playSound('twochainzAttack')
       }
 
       // if (this.type === this.TYPES['2CHAINZ']) {
@@ -167,12 +172,12 @@ export default class Enemy extends Entity {
   }
 
   draw() {
-    drawRect(this.game.screen, this)
+    if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this, require('../../img/twochainz.png'), 4)
+    else drawSprite(this.game.screen, this, require('../../img/twochainzreverse.png'), 4)
     if (this.health < this.maxHealth) {
       this.game.screen.fillStyle = 'green'
       let width = this.health / this.maxHealth * this.size.x
-      this.game.screen.fillRect(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2 - 5,
-                                width, 3)
+      this.game.screen.fillRect(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2 - 5, width, 3)
       this.game.screen.fillStyle = 'black'
     }
 

@@ -15,6 +15,7 @@ export default class Game {
     this.gameStarted = false
     this.playerScore = -53000000
     this.song = new Song(this, 'titleScreen')
+    // this.song.stopSong() // REMOVE TO PLAY SONG
 
     this.bodies = {
       player: null,

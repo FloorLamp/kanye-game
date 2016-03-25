@@ -1,8 +1,8 @@
 const SOUNDS = {
   titleScreen: require('../sounds/intro.mp3'),
   startGame: require('../sounds/startgame.mp3'),
-  gameOver: require('../sounds/gameover.mp3'),
-  gameEnd: require('../sounds/gameend.mp3'),
+  gameOver: require('../sounds/gameover-final.mp3'),
+  gameEnd: require('../sounds/gameend-final.mp3'),
   endoflevel: [
     require('../sounds/endoflevel1.mp3'),
     require('../sounds/endoflevel2.mp3'),
@@ -16,7 +16,9 @@ const SOUNDS = {
     require('../sounds/2chainz1.mp3'),
     require('../sounds/2chainz2.mp3'),
     require('../sounds/2chainzgetem.mp3')
-  ]
+  ],
+  maybachKeys: require('../sounds/maybachkeys.mp3'),
+  sunglasses: require('../sounds/sunglassesadvil.mp3')
 }
 
 export function playSound(sound, self) {
@@ -33,7 +35,7 @@ export function playSound(sound, self) {
 export class Song {
   constructor(game, song) {
     this.game = game
-    this.playing = true
+    this.playSong = true
     this.curSong = new Audio(SOUNDS[song])
     this.loop = true
 
@@ -41,12 +43,12 @@ export class Song {
 
     this.curSong.addEventListener('ended', function() { // need context
       this.currentTime = 0;
-      if (self.loop && self.playing) {
+      if (self.loop && self.playSong) {
         this.play();
       }
     }, false)
 
-    if (this.playing) {
+    if (this.playSong) {
       this.curSong.play()
     }
 
