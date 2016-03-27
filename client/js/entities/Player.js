@@ -1,5 +1,5 @@
 import { playSound } from '../sounds'
-import { drawRect, drawSprite } from '../Draw'
+import { drawSprite } from '../Draw'
 import { KEYS, DIRECTIONS } from '../constants'
 
 import Entity from '../Entity'

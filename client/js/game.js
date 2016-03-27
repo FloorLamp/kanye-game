@@ -3,6 +3,7 @@ import { Song, playSound } from './sounds'
 import HUD from './HUD'
 
 import Enemy from './entities/Enemy'
+import BigSean from './entities/bosses/BigSean'
 import TwoChainz from './entities/bosses/TwoChainz'
 import Player from './entities/Player'
 
@@ -68,7 +69,15 @@ export default class Game {
     }, 5000)
     setTimeout(() => {
       for (var i = 0; i < this.level; i++) {
-        new TwoChainz(this);
+        switch (this.level) {
+          case 1:
+            new TwoChainz(this);
+            break
+          case 2:
+            new BigSean(this);
+            break
+          new Enemy(this);
+        }
       }
     }, 10000)
 

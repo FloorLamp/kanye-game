@@ -14,11 +14,11 @@ export default class Enemy extends Entity {
 
     if (opts === undefined) opts = {}
 
-    this.sprites = {
-      normal: require('../../img/twochainz.png'),
-      reverse: require('../../img/twochainzreverse.png'),
-    }
-    this.spriteScale = 4
+    // this.sprites = {
+    //   normal: require('../../img/twochainz.png'),
+    //   reverse: require('../../img/twochainzreverse.png'),
+    // }
+    // this.spriteScale = 4
 
     this.id = opts.id || 'enemy' + Math.random()
     this.game.bodies.enemies[this.id] = this
@@ -70,7 +70,7 @@ export default class Enemy extends Entity {
   }
 
   startAttack() {
-    this.attackFrame++
+    this.attackFrame = 1
   }
 
   attack() {
@@ -153,8 +153,12 @@ export default class Enemy extends Entity {
   }
 
   draw() {
-    if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this.center, this.sprites.normal, this.spriteScale)
-    else drawSprite(this.game.screen, this.center, this.sprites.reverse, this.spriteScale)
+    if (this.sprites) {
+      if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this.center, this.sprites.normal, this.spriteScale)
+      else drawSprite(this.game.screen, this.center, this.sprites.reverse, this.spriteScale)
+    } else {
+      drawRect(this.game.screen, this)
+    }
 
     if (this.health < this.maxHealth) {
       this.game.screen.fillStyle = 'green'
