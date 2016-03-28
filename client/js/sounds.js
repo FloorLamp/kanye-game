@@ -20,6 +20,9 @@ const SOUNDS = {
   bigseanAttack: [
     require('../sounds/swerve.mp3'),
   ],
+  chiefkeefAttack: [
+    require('../sounds/bangbang.mp3'),
+  ],
   maybachKeys: require('../sounds/maybachkeys.mp3'),
   sunglasses: require('../sounds/sunglassesadvil.mp3'),
   diamonds: require('../sounds/diamonds.mp3')

@@ -37,10 +37,10 @@ export default class BigSean extends Enemy {
   startAttack() {
     let dy = Math.random() * this.game.gameSize.y
     this.destination = {
-      x: this.size.x / 2,
+      x: 0,
       y: this.center.y + (Math.random() - 1) * dy,
     }
-    if (this.center.x < this.game.gameSize.x / 2) this.destination.x = this.game.gameSize.x - this.size.x / 2
+    if (this.center.x <= 0) this.destination.x = this.game.gameSize.x
 
     if (this.destination.y < this.size.y / 2) {
       this.destination.y += dy
@@ -50,12 +50,12 @@ export default class BigSean extends Enemy {
 
     this.attackFrame = 1
 
-    if (this.destination.x === this.size.x / 2)
+    if (this.destination.x === 0)
       playSound('bigseanAttack')
   }
 
   move() {
-    if (this.center.x <= this.size.x / 2 || this.center.x >= this.game.gameSize.x - this.size.x / 2) {
+    if (this.center.x <= 0 || this.center.x >= this.game.gameSize.x) {
       if (!this.destination || Math.abs(this.destination.x - this.center.x) <= this.maxSpeed)
         this.startAttack()
     }

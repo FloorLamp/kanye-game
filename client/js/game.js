@@ -4,6 +4,7 @@ import HUD from './HUD'
 
 import Enemy from './entities/Enemy'
 import BigSean from './entities/bosses/BigSean'
+import ChiefKeef from './entities/bosses/ChiefKeef'
 import TwoChainz from './entities/bosses/TwoChainz'
 import Player from './entities/Player'
 
@@ -54,33 +55,37 @@ export default class Game {
   }
 
   nextLevel() {
+    this.bossSpawned = false
     this.level++
     if (this.level !== 1 && !this.gameEnded) playSound('endoflevel')
 
     setTimeout(() => {
-      for (var i = 0; i < this.level * 3; i++) {
+      for (var i = 0; i < this.level * 2; i++) {
         new Enemy(this);
       }
     }, 1000)
     setTimeout(() => {
-      for (var i = 0; i < this.level * 2; i++) {
+      for (var i = 0; i < this.level * 4; i++) {
         new Enemy(this);
       }
     }, 5000)
-    setTimeout(() => {
-      for (var i = 0; i < this.level; i++) {
-        switch (this.level) {
-          case 1:
-            new TwoChainz(this);
-            break
-          case 2:
-            new BigSean(this);
-            break
-          new Enemy(this);
-        }
-      }
-    }, 10000)
+    console.log('need', _.sum(_.range(this.level + 1)) * 6 + this.level);
+  }
 
+  spawnBoss() {
+    if (this.bossSpawned) return
+
+    this.bossSpawned = true
+    switch (this.level) {
+      case 1:
+        new TwoChainz(this);
+        break
+      case 2:
+        new BigSean(this);
+        break
+      default:
+        new ChiefKeef(this);
+    }
   }
 
   endGame() {
@@ -97,7 +102,8 @@ export default class Game {
     }
 
     if (this.gameStarted && this.level === 0) this.nextLevel();
-    else if (this.level >= 1 && this.enemyKilledCount === _.sum(_.range(this.level + 1)) * 6) this.nextLevel()
+    else if (this.level >= 1 && this.enemyKilledCount === _.sum(_.range(this.level + 1)) * 6 + this.level - 1) this.spawnBoss()
+    else if (this.level >= 1 && this.enemyKilledCount === _.sum(_.range(this.level + 1)) * 6 + this.level) this.nextLevel()
   }
 
   updateScore(change) {

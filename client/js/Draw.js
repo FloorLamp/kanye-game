@@ -3,6 +3,7 @@ export function drawRect(screen, body) {
   if (body.drawColor && body.drawColor != 'black') screen.fillStyle = body.drawColor
   screen.fillRect(body.center.x - body.size.x / 2, body.center.y - body.size.y / 2,
                   body.size.x, body.size.y)
+  screen.fillStyle = 'black'
 }
 export function drawSprite(screen, center, image, scale) {
   if (!scale) scale = 1

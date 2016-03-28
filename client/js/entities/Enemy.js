@@ -51,8 +51,8 @@ export default class Enemy extends Entity {
     this.takesKnockback = true
 
     this.lootTable = _.pairs({
-      MaybachKeys: .4,
-      SunglassesAdvil: .3,
+      MaybachKeys: .3,
+      SunglassesAdvil: .25,
       Diamonds: .2,
     })
 
@@ -86,7 +86,6 @@ export default class Enemy extends Entity {
       if (this.attackFrame === 30) {
         this.melee = new Melee(this.game, this)
         this.drawColor = 'black'
-        // playSound('twochainzAttack')
       }
 
       this.attackFrame++
