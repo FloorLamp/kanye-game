@@ -50,6 +50,7 @@ export default class Enemy extends Entity {
     this.melee = null
     this.drawColor = 'black'
     this.takesKnockback = true
+    this.takesDamage = true
 
     this.lootTable = _.pairs({
       MaybachKeys: .2,
@@ -102,6 +103,8 @@ export default class Enemy extends Entity {
   }
 
   takeDamage(damage, opts) {
+    if (!this.takesDamage) return
+
     this.health -= damage
 
     if (!this.isAlive) {

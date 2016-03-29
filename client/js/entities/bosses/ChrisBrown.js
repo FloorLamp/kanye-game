@@ -1,10 +1,10 @@
 import { playSound } from '../../sounds'
-import { getDistance, getRandomVector } from '../../utils'
+import { getScaledVector, getRandomVector, getBoundsPoint, getDestinationOfVector } from '../../utils'
 
 import Enemy from '../Enemy'
-import Ball from '../../weapons/projectiles/Ball'
+import Wave from '../../weapons/projectiles/Wave'
 
-export default class JayZ extends Enemy {
+export default class ChrisBrown extends Enemy {
 
   constructor(game, opts) {
     super(game, opts)
@@ -15,10 +15,10 @@ export default class JayZ extends Enemy {
     // }
     // this.spriteScale = 4
 
-    this.speed = 3
+    this.speed = 2
     this.maxHealth = 50
     this.health = this.maxHealth
-    this.takesKnockback = false
+    this.takesDamage = false
 
     this.vector = getRandomVector(this.speed)
 
@@ -53,17 +53,24 @@ export default class JayZ extends Enemy {
 
   attack() {
     if (!this.isAttacking) {
-      new Ball(this.game, this)
-      playSound('jayzAttack')
-    }
+      let vectorToPlayer = getScaledVector(this.center, this.game.player.center)
+      let boundsPoint = getBoundsPoint(this.game.gameSize.x, this.game.gameSize.y, vectorToPlayer)
+      let size = 25
+      for (var i = 0; i < 20; i++) {
+        let start1 = {x: boundsPoint.x - i * size * vectorToPlayer.y, y: boundsPoint.y + i * size * vectorToPlayer.x}
+        let end1 = getDestinationOfVector(start1, vectorToPlayer, 1000)
+        new Wave(this.game, start1, end1)
 
-    if (this.attackFrame == 10 || this.attackFrame == 20) {
-      new Ball(this.game, this)
+        let start2 = {x: boundsPoint.x + i * size * vectorToPlayer.y, y: boundsPoint.y - i * size * vectorToPlayer.x}
+        let end2 = getDestinationOfVector(start2, vectorToPlayer, 1000)
+        new Wave(this.game, start2, end2)
+      }
+      playSound('jayzAttack')
     }
 
     this.attackFrame++
 
-    if (this.attackFrame === 150) {
+    if (this.attackFrame === 300) {
       this.attackFrame = 0
     }
   }

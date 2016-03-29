@@ -12,6 +12,13 @@ export function drawCircle(screen, body) {
   screen.fill()
 }
 
+export function drawLine(screen, from, to) {
+  screen.beginPath()
+  screen.moveTo(from.x, from.y)
+  screen.lineTo(to.x, to.y)
+  screen.stroke()
+}
+
 export function drawSprite(screen, center, image, scale) {
   if (!scale) scale = 1
   let sprite = new Image()

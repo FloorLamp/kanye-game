@@ -33,11 +33,18 @@ export function getScaledVector(source, dest, scale) {
   }
 }
 
+export function getDestinationOfVector(source, vector, distance) {
+  return {
+    x: source.x + vector.x * distance,
+    y: source.y + vector.y * distance,
+  }
+}
+
 export function getRandomVector(scale) {
   if (scale === undefined) scale = 1
 
-  let x = Math.random() - 1
-  let y = Math.random() - 1
+  let x = Math.random() - .5
+  let y = Math.random() - .5
   let hypotenuse = getDistance({x: 0, y: 0}, {x, y})
 
   if (hypotenuse === 0)
@@ -50,4 +57,16 @@ export function getRandomVector(scale) {
     x: x / hypotenuse * scale,
     y: y / hypotenuse * scale,
   }
+}
+
+export function getBoundsPoint(w, h, v) {
+  let cx = 0
+  let cy = 0
+  if (v.y < 0) cy = h
+  if (v.x < 0) cx = w
+
+  let p = (cx * v.y - (w / 2 * v.y) - cy * v.x + h / 2 * v.x) / (v.x * v.x + v.y * v.y)
+  let x = cx - p * v.y
+  let y = cy + p * v.x
+  return {x, y}
 }
