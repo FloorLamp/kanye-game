@@ -6,6 +6,7 @@ import Enemy from './entities/Enemy'
 import BigSean from './entities/bosses/BigSean'
 import ChiefKeef from './entities/bosses/ChiefKeef'
 import TwoChainz from './entities/bosses/TwoChainz'
+import JayZ from './entities/bosses/JayZ'
 import Player from './entities/Player'
 
 export default class Game {
@@ -83,8 +84,11 @@ export default class Game {
       case 2:
         new BigSean(this);
         break
-      default:
+      case 3:
         new ChiefKeef(this);
+        break
+      default:
+        new JayZ(this);
     }
   }
 

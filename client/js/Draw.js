@@ -5,6 +5,13 @@ export function drawRect(screen, body) {
                   body.size.x, body.size.y)
   screen.fillStyle = 'black'
 }
+
+export function drawCircle(screen, body) {
+  screen.beginPath()
+  screen.arc(body.center.x, body.center.y, body.size.r, 0, 2 * Math.PI)
+  screen.fill()
+}
+
 export function drawSprite(screen, center, image, scale) {
   if (!scale) scale = 1
   let sprite = new Image()
