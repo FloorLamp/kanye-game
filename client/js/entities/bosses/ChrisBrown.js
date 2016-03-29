@@ -53,19 +53,19 @@ export default class ChrisBrown extends Enemy {
 
   attack() {
     if (!this.isAttacking) {
-      let vectorToPlayer = getScaledVector(this.center, this.game.player.center)
-      let boundsPoint = getBoundsPoint(this.game.gameSize.x, this.game.gameSize.y, vectorToPlayer)
+      let v = getScaledVector(this.center, this.game.bodies.enemies.rihanna.center)
+      let boundsPoint = getBoundsPoint(this.game.gameSize.x, this.game.gameSize.y, v)
       let size = 25
       for (var i = 0; i < 20; i++) {
-        let start1 = {x: boundsPoint.x - i * size * vectorToPlayer.y, y: boundsPoint.y + i * size * vectorToPlayer.x}
-        let end1 = getDestinationOfVector(start1, vectorToPlayer, 1000)
+        let start1 = {x: boundsPoint.x - i * size * v.y, y: boundsPoint.y + i * size * v.x}
+        let end1 = getDestinationOfVector(start1, v, 1000)
         new Wave(this.game, start1, end1)
 
-        let start2 = {x: boundsPoint.x + i * size * vectorToPlayer.y, y: boundsPoint.y - i * size * vectorToPlayer.x}
-        let end2 = getDestinationOfVector(start2, vectorToPlayer, 1000)
+        let start2 = {x: boundsPoint.x + i * size * v.y, y: boundsPoint.y - i * size * v.x}
+        let end2 = getDestinationOfVector(start2, v, 1000)
         new Wave(this.game, start2, end2)
       }
-      playSound('jayzAttack')
+      playSound('wavesAttack')
     }
 
     this.attackFrame++

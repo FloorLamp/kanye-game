@@ -8,6 +8,7 @@ import Enemy from './entities/Enemy'
 import BigSean from './entities/bosses/BigSean'
 import ChiefKeef from './entities/bosses/ChiefKeef'
 import ChrisBrown from './entities/bosses/ChrisBrown'
+import Rihanna from './entities/bosses/Rihanna'
 import TwoChainz from './entities/bosses/TwoChainz'
 import JayZ from './entities/bosses/JayZ'
 import Player from './entities/Player'
@@ -22,7 +23,7 @@ export default class Game {
     this.gameStarted = false
     this.playerScore = -53000000
     this.song = new Song(this, 'titleScreen')
-    // this.song.stopSong() // REMOVE TO PLAY SONG
+    this.song.stopSong() // REMOVE TO PLAY SONG
 
     this.bodies = {
       player: null,
@@ -74,6 +75,7 @@ export default class Game {
     //   }
     // }, 5000)
     new ChrisBrown(this)
+    new Rihanna(this)
     console.log('need', _.sum(_.range(this.level + 1)) * 6 + this.level);
   }
 

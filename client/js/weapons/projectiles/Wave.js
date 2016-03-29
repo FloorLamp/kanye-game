@@ -16,6 +16,7 @@ export default class Wave extends Weapon {
     this.speed = 5
 
     this.sprite = null
+    this.drawColor = 'blue'
 
     this.center = {
       x: source.x,
@@ -29,7 +30,8 @@ export default class Wave extends Weapon {
     this.frame = 0
 
     this.enemies = {
-      player: this.game.player
+      player: this.game.player,
+      rihanna: this.game.bodies.enemies.rihanna,
     }
   }
 
@@ -39,7 +41,6 @@ export default class Wave extends Weapon {
     this.center.y += this.vector.y
 
     if (this.frame > 240) {
-      console.log('destroy');
       this.destroy()
       return
     }
