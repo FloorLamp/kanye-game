@@ -15,7 +15,7 @@ export default class TwoChainz extends Enemy {
     // }
     // this.spriteScale = 4
 
-    this.speed = 4
+    this.speed = 5
     this.maxHealth = 30
     this.health = this.maxHealth
     this.takesKnockback = false

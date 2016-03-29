@@ -28,7 +28,8 @@ const SOUNDS = {
   ],
   maybachKeys: require('../sounds/maybachkeys.mp3'),
   sunglasses: require('../sounds/sunglassesadvil.mp3'),
-  diamonds: require('../sounds/diamonds.mp3')
+  diamonds: require('../sounds/diamonds.mp3'),
+  blackballs: require('../sounds/myblackballs.mp3'),
 }
 
 export function playSound(sound, self) {

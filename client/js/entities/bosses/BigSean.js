@@ -29,8 +29,7 @@ export default class BigSean extends Enemy {
     this.destination = null
 
     this.lootTable = _.pairs({
-      SunglassesAdvil: .7,
-      Diamonds: .7,
+      BlackBalls: 1,
     })
   }
 

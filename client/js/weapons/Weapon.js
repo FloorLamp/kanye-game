@@ -28,6 +28,11 @@ export default class Weapon extends Entity {
     }
 
     this.game.bodies.objects[this.id] = this
+    this.attackFrame = 0
+  }
+
+  get isAttacking() {
+    return this.attackFrame > 0
   }
 
   destroy() {

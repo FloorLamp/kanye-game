@@ -1,7 +1,7 @@
 import { drawRect, drawSprite } from '../Draw'
 import { playSound } from '../sounds'
 import { getDistance, getScaledVector } from '../utils'
-import { DIRECTIONS } from '../constants'
+import { DIRECTIONS, STATUS } from '../constants'
 
 import Entity from '../Entity'
 import Item from '../items/Item'
@@ -39,6 +39,7 @@ export default class Enemy extends Entity {
     this.center = opts.center
 
     // defaults
+    this.status = null
     this.speed = 2
     this.vector = null
     this.points = 1000000
@@ -56,6 +57,10 @@ export default class Enemy extends Entity {
       Diamonds: .2,
     })
 
+  }
+
+  get isAlive() {
+    return this.health > 0
   }
 
   get isAttacking() {
@@ -99,7 +104,7 @@ export default class Enemy extends Entity {
   takeDamage(damage, opts) {
     this.health -= damage
 
-    if (this.health <= 0) {
+    if (!this.isAlive) {
       this.game.updateScore(this.points)
       this.destroy()
     }
@@ -147,6 +152,8 @@ export default class Enemy extends Entity {
   }
 
   update() {
+    if (this.status === STATUS.STUNNED) return
+
     this.attack()
     this.move()
   }

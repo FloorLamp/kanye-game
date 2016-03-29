@@ -3,8 +3,9 @@ import { drawRect, drawSprite } from '../Draw'
 import { playSound } from '../sounds'
 
 import Entity from '../Entity'
-import MaybachKeys from '../weapons/projectiles/MaybachKeys'
+import BlackBalls from '../weapons/projectiles/BlackBalls'
 import Diamonds from '../weapons/projectiles/Diamonds'
+import MaybachKeys from '../weapons/projectiles/MaybachKeys'
 
 export default class Item extends Entity {
 
@@ -29,25 +30,31 @@ export default class Item extends Entity {
     this.type = opts.type
     this.count = 1
 
-    if (this.type === 'MaybachKeys' ||
-        this.type === 'Diamonds') {
+    if (this.type === 'BlackBalls' ||
+        this.type === 'Diamonds' ||
+        this.type === 'MaybachKeys') {
       this.isCollectible = true
     } else if (this.type === 'SunglassesAdvil') {
       this.isCollectible = false
     }
 
     switch (this.type) {
-      case 'MaybachKeys':
-        this.sprite = require('../../img/maybachkey.png')
-        this.spriteScale = 4
-        this.sound = 'maybachKeys'
-        this.count = 2
+      case 'BlackBalls':
+        // this.sprite = require('../../img/sunglasses.png')
+        // this.sound = 'blackballs'
         break
       case 'Diamonds':
         this.sprite = require('../../img/diamond.png')
         this.spriteScale = 12
         this.sound = 'diamonds'
         break
+      case 'MaybachKeys':
+        this.sprite = require('../../img/maybachkey.png')
+        this.spriteScale = 4
+        this.sound = 'maybachKeys'
+        this.count = 2
+        break
+
       case 'SunglassesAdvil':
         this.sprite = require('../../img/sunglasses.png')
         this.sound = 'sunglasses'
@@ -78,6 +85,10 @@ export default class Item extends Entity {
   use() {
     if (this.type === 'MaybachKeys') {
       new MaybachKeys(this.game, this.game.player, this.game.mouse)
+
+    } else if (this.type === 'BlackBalls') {
+      if (!_.size(this.game.bodies.enemies)) return
+      new BlackBalls(this.game, this.game.player, _.sample(this.game.bodies.enemies))
 
     } else if (this.type === 'Diamonds') {
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x, y: this.game.player.center.y - 1}) // N
