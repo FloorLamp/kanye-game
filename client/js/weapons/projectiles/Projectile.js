@@ -6,6 +6,7 @@ import Weapon from '../Weapon'
 export default class Projectile extends Weapon {
 
   constructor(game, source, destination, opts) {
+    if (!opts) opts = {}
     super(game, source, opts)
 
     this.size = {
@@ -13,7 +14,7 @@ export default class Projectile extends Weapon {
       y: 5
     }
 
-    this.speed = 5
+    this.speed = opts.speed || 5
 
     this.sprite = null
 
@@ -25,7 +26,7 @@ export default class Projectile extends Weapon {
 
     this.isActive = true
 
-    this.damage = 5
+    this.damage = opts.damage || 5
   }
 
   update() {

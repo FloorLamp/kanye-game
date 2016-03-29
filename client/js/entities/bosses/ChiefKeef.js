@@ -16,10 +16,13 @@ export default class TwoChainz extends Enemy {
     // this.spriteScale = 4
 
     this.speed = 4
-    this.attackChance = .025
     this.maxHealth = 30
     this.health = this.maxHealth
     this.takesKnockback = false
+
+    this.attackChance = .025
+    this.projectileSpeed = 8
+    this.projectileDamage = 8
 
     this.vector = getScaledVector(this.center, {x: Math.random() - 1, y: Math.random() - 1}, this.speed)
 
@@ -54,14 +57,14 @@ export default class TwoChainz extends Enemy {
 
   attack() {
     if (!this.isAttacking && Math.random() < this.attackChance) {
-      new Projectile(this.game, this, this.game.player.center)
+      new Projectile(this.game, this, this.game.player.center, {speed: this.projectileSpeed, damage: this.projectileDamage})
       playSound('chiefkeefAttack')
       this.attackFrame++
     }
 
     if (this.isAttacking) {
       if (this.attackFrame == 10) {
-        new Projectile(this.game, this, this.game.player.center)
+        new Projectile(this.game, this, this.game.player.center, {speed: this.projectileSpeed, damage: this.projectileDamage})
       }
       this.attackFrame++
 
