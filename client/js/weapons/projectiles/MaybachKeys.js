@@ -8,7 +8,7 @@ export default class MaybachKeys extends Projectile {
     this.sprite = require('../../../img/maybachkey.png')
     this.spriteScale = 6
 
-    this.speed = 6
+    this.speed = 7.5
     this.damage = 10
   }
 

@@ -20,8 +20,8 @@ export default class BigSean extends Enemy {
       y: 40
     }
 
-    this.maxSpeed = 12
-    this.accelerationFrames = 60
+    this.maxSpeed = 15
+    this.accelerationFrames = 90
     this.maxHealth = 30
     this.health = this.maxHealth
     this.takesKnockback = false
@@ -62,7 +62,7 @@ export default class BigSean extends Enemy {
     if (this.isAttacking)
       this.attackFrame++
 
-    this.speed = this.attackFrame < 60 ? (this.attackFrame / this.accelerationFrames * this.maxSpeed) : this.maxSpeed
+    this.speed = this.attackFrame < this.accelerationFrames ? (this.attackFrame / this.accelerationFrames * this.maxSpeed) : this.maxSpeed
     this.vector = getScaledVector(this.center, this.destination, this.speed)
 
     this.center.x += this.vector.x

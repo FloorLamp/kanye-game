@@ -101,7 +101,7 @@ export default class Item extends Entity {
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x + 1, y: this.game.player.center.y - 1}) // NE
 
     } else if (this.type === 'SunglassesAdvil') {
-      this.game.player.heal(10)
+      this.game.player.heal(20)
     }
 
     if (this.sound) playSound(this.sound)

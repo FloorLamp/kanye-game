@@ -52,9 +52,9 @@ export default class Enemy extends Entity {
     this.takesKnockback = true
 
     this.lootTable = _.pairs({
-      MaybachKeys: .3,
-      SunglassesAdvil: .25,
-      Diamonds: .2,
+      MaybachKeys: .2,
+      SunglassesAdvil: .1,
+      Diamonds: .1,
     })
 
   }
