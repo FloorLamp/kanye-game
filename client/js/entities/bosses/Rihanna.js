@@ -1,5 +1,6 @@
 import { playSound } from '../../sounds'
 import { getRandomVector } from '../../utils'
+import { DIRECTIONS } from '../../constants'
 
 import Enemy from '../Enemy'
 
@@ -16,35 +17,30 @@ export default class Rihanna extends Enemy {
 
     this.drawColor = 'pink'
 
-    this.speed = 2
+    this.speed = 2.5
     this.takesDamage = false
+    this.postDestroyTargetFrame = 0
 
+    this.target = null
     this.vector = getRandomVector(this.speed)
   }
 
-  move() {
-    this.center.x += this.vector.x
-    this.center.y += this.vector.y
-
-    // bounce off walls
-    if (this.center.x < this.size.x / 2) {
-      this.center.x = this.size.x / 2
-      this.vector.x *= -1
-    } else if (this.center.x > this.game.gameSize.x - this.size.x / 2) {
-      this.center.x = this.game.gameSize.x - this.size.x / 2
-      this.vector.x *= -1
-    }
-
-    if (this.center.y < this.size.y / 2) {
-      this.center.y = this.size.y / 2
-      this.vector.y *= -1
-    } else if (this.center.y > this.game.gameSize.y - this.size.y / 2) {
-      this.center.y = this.game.gameSize.y - this.size.y / 2
-      this.vector.y *= -1
-    }
-
+  setTarget(target) {
+    this.target = target
   }
 
-  attack() {}
+  update() {
+    if (this.target && !this.target.isAlive) {
+      this.postDestroyTargetFrame++
+      if (this.postDestroyTargetFrame === 120) this.destroy()
+      return
+    }
 
+    this.attack()
+    this.move()
+  }
+
+  destroy() {
+    delete this.game.bodies.enemies[this.id]
+  }
 }

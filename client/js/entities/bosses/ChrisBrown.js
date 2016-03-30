@@ -1,5 +1,6 @@
 import { playSound } from '../../sounds'
 import { getScaledVector, getRandomVector, getBoundsPoint, getDestinationOfVector } from '../../utils'
+import { STATUS } from '../../constants'
 
 import Enemy from '../Enemy'
 import Wave from '../../weapons/projectiles/Wave'
@@ -15,12 +16,14 @@ export default class ChrisBrown extends Enemy {
     // }
     // this.spriteScale = 4
 
-    this.speed = 2
-    this.maxHealth = 50
-    this.health = this.maxHealth
+    this.speed = 3
     this.takesDamage = false
+    this.takesKnockback = false
 
     this.vector = getRandomVector(this.speed)
+
+    this.attackCount = 0
+    this.attackFrame = -240
 
     this.lootTable = _.pairs({
       SunglassesAdvil: .7,
@@ -29,6 +32,8 @@ export default class ChrisBrown extends Enemy {
   }
 
   move() {
+    if (this.isAttacking && this.attackFrame < 150) return
+
     this.center.x += this.vector.x
     this.center.y += this.vector.y
 
@@ -52,7 +57,14 @@ export default class ChrisBrown extends Enemy {
   }
 
   attack() {
-    if (!this.isAttacking) {
+    if (this.attackFrame === 0) {
+      if (this.attackCount === 5) {
+        this.status = STATUS.STUNNED
+        this.takesDamage = true
+        this.game.bodies.enemies.rihanna.setTarget(this)
+        return
+      }
+
       let v = getScaledVector(this.center, this.game.bodies.enemies.rihanna.center)
       let boundsPoint = getBoundsPoint(this.game.gameSize.x, this.game.gameSize.y, v)
       let size = 25
@@ -66,6 +78,8 @@ export default class ChrisBrown extends Enemy {
         new Wave(this.game, start2, end2)
       }
       playSound('wavesAttack')
+      this.startAttack()
+      this.attackCount++
     }
 
     this.attackFrame++

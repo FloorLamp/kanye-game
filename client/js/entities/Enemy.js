@@ -39,6 +39,7 @@ export default class Enemy extends Entity {
     this.center = opts.center
 
     // defaults
+    this.target = this.game.player
     this.status = null
     this.speed = 2
     this.vector = null
@@ -80,11 +81,12 @@ export default class Enemy extends Entity {
   }
 
   attack() {
+    if (!this.target) return
+
     if (this.melee && this.game.bodies.objects[this.melee.id] === undefined) this.melee = null;
 
-    if (getDistance(this.center, this.game.player.center) < 80 && !this.isAttacking) {
+    if (getDistance(this.center, this.target.center) < 80 && !this.isAttacking) {
       this.startAttack()
-
     }
 
     if (this.isAttacking) {
@@ -122,15 +124,18 @@ export default class Enemy extends Entity {
   }
 
   get direction() {
-    return this.center.x < this.game.player.center.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
+    if (!this.target) return DIRECTIONS.LEFT
+    return this.center.x < this.target.center.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
   }
 
   move() {
-    // move towards player
-    let x = this.game.player.center.x
-    if (this.direction == DIRECTIONS.RIGHT) x -= (this.size.x + 10) // go towards either side of player
-    else x += (this.size.x + 10)
-    this.vector = getScaledVector(this.center, {x, y: this.game.player.center.y}, this.speed)
+    // move towards target
+    if (this.target) {
+      let x = this.target.center.x
+      if (this.direction == DIRECTIONS.RIGHT) x -= (this.size.x + 10) // go towards either side of target
+      else x += (this.size.x + 10)
+      this.vector = getScaledVector(this.center, {x, y: this.target.center.y}, this.speed)
+    }
 
     this.center.x += this.vector.x
     this.center.y += this.vector.y
@@ -157,7 +162,7 @@ export default class Enemy extends Entity {
   update() {
     if (this.status === STATUS.STUNNED) return
 
-    this.attack()
+    if (this.target && this.target.isAlive) this.attack()
     this.move()
   }
 

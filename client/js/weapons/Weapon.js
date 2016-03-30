@@ -18,7 +18,7 @@ export default class Weapon extends Entity {
       this.sourceId = source.id
 
       // determine who this damages
-      if (this.source.id === 'player') {
+      if (this.source.id === 'player' || this.source.id === 'rihanna') {
         this.enemies = this.game.bodies.enemies
       } else {
         this.enemies = [this.game.player]
