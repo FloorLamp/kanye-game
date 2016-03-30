@@ -29,6 +29,8 @@ const SOUNDS = {
   wavesAttack: [
     require('../sounds/wavesdontdie.mp3'),
   ],
+  rihanna_ellaella: require('../sounds/rihanna_ellaella.mp3'),
+  rihanna_stand: require('../sounds/rihanna_stand.mp3'),
   maybachKeys: require('../sounds/maybachkeys.mp3'),
   sunglasses: require('../sounds/sunglassesadvil.mp3'),
   diamonds: require('../sounds/diamonds.mp3'),

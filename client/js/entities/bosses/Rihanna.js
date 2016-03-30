@@ -1,8 +1,9 @@
 import { playSound } from '../../sounds'
-import { getRandomVector } from '../../utils'
+import { getDistance, getRandomVector } from '../../utils'
 import { DIRECTIONS } from '../../constants'
 
 import Enemy from '../Enemy'
+import Umbrella from '../../weapons/Umbrella'
 
 export default class Rihanna extends Enemy {
 
@@ -23,21 +24,45 @@ export default class Rihanna extends Enemy {
 
     this.target = null
     this.vector = getRandomVector(this.speed)
+
+    playSound('rihanna_stand')
   }
 
   setTarget(target) {
     this.target = target
   }
 
+  startAttack() {
+    this.attackFrame = 1
+    playSound('rihanna_ellaella')
+  }
+
+  attack() {
+    if (this.isAttacking) {
+      this.attackFrame++
+
+      if (this.attackFrame === 100)
+        this.melee = new Umbrella(this.game, this)
+
+    } else {
+      if (this.isInAttackingRange && !this.isAttacking) {
+        this.startAttack()
+      }
+    }
+  }
+
   update() {
-    if (this.target && !this.target.isAlive) {
-      this.postDestroyTargetFrame++
-      if (this.postDestroyTargetFrame === 120) this.destroy()
-      return
+    if (this.target) {
+      if (!this.target.isAlive) {
+        this.postDestroyTargetFrame++
+        if (this.postDestroyTargetFrame === 90) this.destroy()
+        return
+      }
+
+      this.attack()
     }
 
-    this.attack()
-    this.move()
+    if (!this.isAttacking) this.move()
   }
 
   destroy() {

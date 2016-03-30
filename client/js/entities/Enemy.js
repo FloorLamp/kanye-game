@@ -85,7 +85,7 @@ export default class Enemy extends Entity {
 
     if (this.melee && this.game.bodies.objects[this.melee.id] === undefined) this.melee = null;
 
-    if (getDistance(this.center, this.target.center) < 80 && !this.isAttacking) {
+    if (this.isInAttackingRange && !this.isAttacking) {
       this.startAttack()
     }
 
@@ -134,7 +134,19 @@ export default class Enemy extends Entity {
       let x = this.target.center.x
       if (this.direction == DIRECTIONS.RIGHT) x -= (this.size.x + 10) // go towards either side of target
       else x += (this.size.x + 10)
-      this.vector = getScaledVector(this.center, {x, y: this.target.center.y}, this.speed)
+
+      let destination = {x, y: this.target.center.y}
+      let distance = getDistance(this.center, destination)
+
+      this.isInAttackingRange = false
+
+      if (distance === 0) {
+        this.vector = {x: 0, y: 0}
+        this.isInAttackingRange = true
+      } else if (distance < this.speed)
+        this.vector = getScaledVector(this.center, destination, distance)
+      else
+        this.vector = getScaledVector(this.center, destination, this.speed)
     }
 
     this.center.x += this.vector.x

@@ -17,6 +17,8 @@ export default class ChrisBrown extends Enemy {
     // this.spriteScale = 4
 
     this.speed = 3
+    this.maxHealth = 800
+    this.health = this.maxHealth
     this.takesDamage = false
     this.takesKnockback = false
 
