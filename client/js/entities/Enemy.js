@@ -52,6 +52,8 @@ export default class Enemy extends Entity {
     this.drawColor = 'black'
     this.takesKnockback = true
     this.takesDamage = true
+    this.deathFrame = 0
+    this.deathFrames = 60
 
     this.lootTable = _.pairs({
       MaybachKeys: .2,
@@ -111,7 +113,6 @@ export default class Enemy extends Entity {
 
     if (!this.isAlive) {
       this.game.updateScore(this.points)
-      this.destroy()
     }
 
     if (!opts) return
@@ -172,6 +173,11 @@ export default class Enemy extends Entity {
   }
 
   update() {
+    if (!this.isAlive) {
+      this.deathFrame++
+      if (this.deathFrame === this.deathFrames) this.destroy()
+      return
+    }
     if (this.status === STATUS.STUNNED) return
 
     if (this.target && this.target.isAlive) this.attack()
@@ -179,6 +185,8 @@ export default class Enemy extends Entity {
   }
 
   draw() {
+    if (!this.isAlive && this.deathFrame % 12 === 0) return
+
     if (this.sprites) {
       if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this.center, this.sprites.normal, this.spriteScale)
       else drawSprite(this.game.screen, this.center, this.sprites.reverse, this.spriteScale)
@@ -186,7 +194,7 @@ export default class Enemy extends Entity {
       drawRect(this.game.screen, this)
     }
 
-    if (this.health < this.maxHealth) {
+    if (this.isAlive && this.health < this.maxHealth) {
       this.game.screen.fillStyle = 'green'
       let width = this.health / this.maxHealth * this.size.x
       this.game.screen.fillRect(this.center.x - this.size.x / 2, this.center.y - this.size.y / 2 - 5, width, 3)

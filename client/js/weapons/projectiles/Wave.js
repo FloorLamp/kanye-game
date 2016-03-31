@@ -26,7 +26,7 @@ export default class Wave extends Weapon {
 
     this.isActive = true
 
-    this.damage = 25
+    this.damage = 20
     this.frame = 0
 
     this.enemies = {

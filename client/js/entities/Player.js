@@ -144,11 +144,10 @@ export default class Player extends Entity {
   }
 
   draw() {
-    if (this.isInvincible && this.invincibilityFrame % 6 === 0) {}
-    else {
-      if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this.center, this.sprites.normal, this.spriteScale)
-      else drawSprite(this.game.screen, this.center, this.sprites.reverse, this.spriteScale)
-    }
+    if (this.isInvincible && this.invincibilityFrame % 6 === 0) return
+
+    if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this.center, this.sprites.normal, this.spriteScale)
+    else drawSprite(this.game.screen, this.center, this.sprites.reverse, this.spriteScale)
   }
 
   destroy() {}
