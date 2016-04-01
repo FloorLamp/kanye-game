@@ -6,6 +6,7 @@ import HUD from './HUD'
 
 import Enemy from './entities/Enemy'
 import BigSean from './entities/bosses/BigSean'
+import Chance from './entities/bosses/Chance'
 import ChiefKeef from './entities/bosses/ChiefKeef'
 import ChrisBrown from './entities/bosses/ChrisBrown'
 import Rihanna from './entities/bosses/Rihanna'
@@ -64,18 +65,18 @@ export default class Game {
     this.level++
     if (this.level !== 1 && !this.gameEnded) playSound('endoflevel')
 
-    setTimeout(() => {
-      for (var i = 0; i < this.level * 2; i++) {
-        new Enemy(this);
-      }
-    }, 1000)
-    setTimeout(() => {
-      for (var i = 0; i < this.level * 4; i++) {
-        new Enemy(this);
-      }
-    }, 5000)
+    // setTimeout(() => {
+    //   for (var i = 0; i < this.level * 2; i++) {
+    //     new Enemy(this);
+    //   }
+    // }, 1000)
+    // setTimeout(() => {
+    //   for (var i = 0; i < this.level * 4; i++) {
+    //     new Enemy(this);
+    //   }
+    // }, 5000)
     // new ChrisBrown(this)
-    // new Rihanna(this)
+    new Chance(this)
     console.log('need', _.sum(_.range(this.level + 1)) * 6 + this.level);
   }
 

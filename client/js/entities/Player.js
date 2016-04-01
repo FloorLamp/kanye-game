@@ -1,5 +1,5 @@
 import { playSound } from '../sounds'
-import { drawSprite } from '../Draw'
+import { drawSprite, drawBox } from '../Draw'
 import { KEYS, DIRECTIONS } from '../constants'
 
 import Entity from '../Entity'
@@ -49,8 +49,14 @@ export default class Player extends Entity {
       keyState[e.keyCode] = false
     })
 
+    window.addEventListener('mousedown', (e) => {
+      this.isMousedown = true
+      this.isMousedownFirst = true
+    })
+
     window.addEventListener('mouseup', (e) => {
       this.clicked = true
+      this.isMousedown = false
     })
 
     this.isDown = function(keyCode) {
@@ -73,7 +79,8 @@ export default class Player extends Entity {
     return this.invincibilityFrame > 0
   }
 
-  takeDamage(damage) {
+  takeDamage(damage, opts) {
+    if (!opts) opts = {}
     if (this.isInvincible) return
 
     this.health -= damage
@@ -83,6 +90,7 @@ export default class Player extends Entity {
     }
 
     // start invincibility
+    if (opts.ignoresInvincibility) return
     this.invincibilityFrame++
   }
 
@@ -129,9 +137,17 @@ export default class Player extends Entity {
         this.startAttack()
       }
     }
-    if (this.clicked) {
-      this.clicked = false
-      if (this.item) this.item.use()
+    if (this.isMousedown) {
+      if (this.item && this.item.type === 'UltralightBeam') this.item.use(this.isMousedownFirst)
+      this.isMousedownFirst = false
+    } else {
+      if (this.clicked) {
+        if (this.item) {
+          if (this.item.type === 'UltralightBeam') this.item.song.stopSong()
+          else this.item.use()
+        }
+        this.clicked = false
+      }
     }
 
     this.move()
@@ -148,6 +164,7 @@ export default class Player extends Entity {
 
     if (this.direction === DIRECTIONS.RIGHT) drawSprite(this.game.screen, this.center, this.sprites.normal, this.spriteScale)
     else drawSprite(this.game.screen, this.center, this.sprites.reverse, this.spriteScale)
+    drawBox(this.game.screen, this)
   }
 
   destroy() {}

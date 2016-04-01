@@ -59,6 +59,7 @@ export function getRandomVector(scale) {
   }
 }
 
+// returns point that intersects the vector from the center of the rect (defined by w, h), and its normal (which intersects the edge of the rect)
 export function getBoundsPoint(w, h, v) {
   let cx = 0
   let cy = 0
@@ -69,4 +70,9 @@ export function getBoundsPoint(w, h, v) {
   let x = cx - p * v.y
   let y = cy + p * v.x
   return {x, y}
+}
+
+// returns true if number is inside bounds
+export function isInside(x, start, end) {
+  return (x >= start && x <= end) || (x <= start && x >= end)
 }

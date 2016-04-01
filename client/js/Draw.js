@@ -6,16 +6,23 @@ export function drawRect(screen, body) {
   screen.fillStyle = 'black'
 }
 
+export function drawBox(screen, body) {
+  screen.strokeStyle = 'black'
+  screen.strokeRect(body.center.x - body.size.x / 2, body.center.y - body.size.y / 2,
+                  body.size.x, body.size.y)
+}
+
 export function drawCircle(screen, body) {
   screen.beginPath()
   screen.arc(body.center.x, body.center.y, body.size.r, 0, 2 * Math.PI)
   screen.fill()
 }
 
-export function drawLine(screen, from, to) {
+export function drawLine(screen, from, to, color) {
   screen.beginPath()
   screen.moveTo(from.x, from.y)
   screen.lineTo(to.x, to.y)
+  if (color !== undefined) screen.strokeStyle = color
   screen.stroke()
 }
 

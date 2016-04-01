@@ -1,11 +1,12 @@
-import { isColliding } from '../utils'
+import { isColliding, getScaledVector } from '../utils'
 import { drawRect, drawSprite } from '../Draw'
-import { playSound } from '../sounds'
+import { playSound, Song } from '../sounds'
 
 import Entity from '../Entity'
 import BlackBalls from '../weapons/projectiles/BlackBalls'
 import Diamonds from '../weapons/projectiles/Diamonds'
 import MaybachKeys from '../weapons/projectiles/MaybachKeys'
+import UltralightBeam from '../weapons/UltralightBeam'
 
 export default class Item extends Entity {
 
@@ -30,18 +31,20 @@ export default class Item extends Entity {
     this.type = opts.type
     this.count = 1
 
-    if (this.type === 'BlackBalls' ||
-        this.type === 'Diamonds' ||
-        this.type === 'MaybachKeys') {
-      this.isCollectible = true
-    } else if (this.type === 'SunglassesAdvil') {
+    if (this.type === 'SunglassesAdvil') {
       this.isCollectible = false
+    } else {
+      this.isCollectible = true
     }
 
     switch (this.type) {
       case 'BlackBalls':
         // this.sprite = require('../../img/sunglasses.png')
         // this.sound = 'blackballs'
+        break
+      case 'UltralightBeam':
+        this.sound = 'ultralight_beam'
+        this.count = 600
         break
       case 'Diamonds':
         this.sprite = require('../../img/diamond.png')
@@ -82,13 +85,16 @@ export default class Item extends Entity {
     return true
   }
 
-  use() {
+  use(isFirst) {
     if (this.type === 'MaybachKeys') {
       new MaybachKeys(this.game, this.game.player, this.game.mouse)
 
     } else if (this.type === 'BlackBalls') {
       if (!_.size(this.game.bodies.enemies)) return
       new BlackBalls(this.game, this.game.player, _.sample(this.game.bodies.enemies))
+
+    } else if (this.type === 'UltralightBeam') {
+      new UltralightBeam(this.game, this.game.player, getScaledVector(this.game.player.center, this.game.mouse))
 
     } else if (this.type === 'Diamonds') {
       new Diamonds(this.game, this.game.player, {x: this.game.player.center.x, y: this.game.player.center.y - 1}) // N
@@ -104,7 +110,12 @@ export default class Item extends Entity {
       this.game.player.heal(20)
     }
 
-    if (this.sound) playSound(this.sound)
+    if (this.sound) {
+      if (this.type === 'UltralightBeam') {
+        if (isFirst) this.song = new Song(this.game, this.sound)
+      }
+      else playSound(this.sound)
+    }
 
     this.count--
     if (this.count <= 0)
@@ -141,6 +152,8 @@ export default class Item extends Entity {
   }
 
   destroy() {
+    if (this.song) this.song.stopSong()
+
     if (this.isPickedUp)
       delete this.game.player.item
     else

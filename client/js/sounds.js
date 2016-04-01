@@ -29,6 +29,7 @@ const SOUNDS = {
   wavesAttack: [
     require('../sounds/wavesdontdie.mp3'),
   ],
+  ultralight_beam: require('../sounds/ultralightbeam.mp3'),
   rihanna_ellaella: require('../sounds/rihanna_ellaella.mp3'),
   rihanna_stand: require('../sounds/rihanna_stand.mp3'),
   maybachKeys: require('../sounds/maybachkeys.mp3'),
@@ -38,14 +39,15 @@ const SOUNDS = {
 }
 
 export function playSound(sound, self) {
-  var soundFile = SOUNDS[sound];
-  var toPlay = soundFile;
+  let soundFile = SOUNDS[sound]
+  let toPlay = soundFile
   if (Array.isArray(soundFile)) {
-    toPlay = soundFile[Math.floor(Math.random() * soundFile.length)];
+    toPlay = _.sample(soundFile)
   }
 
-  var toPlaySound = new Audio(toPlay);
-  toPlaySound.play();
+  let toPlaySound = new Audio(toPlay)
+  toPlaySound.play()
+  return toPlaySound
 }
 
 export class Song {
@@ -55,12 +57,10 @@ export class Song {
     this.curSong = new Audio(SOUNDS[song])
     this.loop = true
 
-    var self = this;
-
-    this.curSong.addEventListener('ended', function() { // need context
-      this.currentTime = 0;
-      if (self.loop && self.playSong) {
-        this.play();
+    this.curSong.addEventListener('ended', () => {
+      this.currentTime = 0
+      if (this.loop && this.playSong) {
+        this.curSong.play()
       }
     }, false)
 
